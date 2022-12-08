@@ -1,9 +1,9 @@
 import { Heading, Text } from '@chakra-ui/react';
 
-function App() {
+function Home() {
   return (
     <div className="App">
-      <Heading>The spectacle before us was indeed sublime.</Heading>
+      <Heading>Pokecoin</Heading>
       <Text fontSize="lg">
         Apparently we had reached a great height in the atmosphere, for the sky
         was a dead black, and the stars had ceased to twinkle. By the same
@@ -17,4 +17,4 @@ function App() {
   );
 }
 
-export default App;
+export default Home;
