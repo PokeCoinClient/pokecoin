@@ -24,31 +24,23 @@ const layoutRoute = rootRoute.createRoute({
   },
 });
 
-const Routes = [
-  {
-    path: '/',
-    component: () => <Home />,
-  },
-  {
-    path: '/shop',
-    component: () => <Shop />,
-  },
-  {
-    path: '/mine',
-    component: () => <Mine />,
-  },
-];
+const indexRoute = layoutRoute.createRoute({
+  path: '/',
+  component: Home,
+});
 
-const routesFactory = Routes.map((route) => {
-  return layoutRoute.createRoute({
-    id: route.path,
-    path: route.path,
-    component: route.component,
-  });
+const shopRoute = layoutRoute.createRoute({
+  path: '/shop',
+  component: Shop,
+});
+
+const mineRoute = layoutRoute.createRoute({
+  path: '/mine',
+  component: Mine,
 });
 
 const routeConfig = rootRoute.addChildren([
-  layoutRoute.addChildren([...routesFactory]),
+  layoutRoute.addChildren([indexRoute, shopRoute, mineRoute]),
 ]);
 
 const router = createReactRouter({

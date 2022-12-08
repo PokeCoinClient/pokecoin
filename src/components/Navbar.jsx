@@ -1,6 +1,5 @@
-import { Link } from '@tanstack/react-router';
-import React from 'react';
 import { Flex, Text } from '@chakra-ui/react';
+import { Link } from '@tanstack/react-router';
 import ThemeToggleButton from './ToggleButton';
 
 function Navbar() {
@@ -22,11 +21,30 @@ function Navbar() {
       </Flex>
 
       <Flex align="flex-end" gap={2}>
-        <Link to="/" activeOptions={{ exact: true }}>
+        <Link
+          to="/"
+          activeProps={{
+            style: { fontWeight: 'bold' },
+          }}
+        >
           Home
         </Link>
-        <Link to="/shop">Shop</Link>
-        <Link to="/mine">Mine</Link>
+        <Link
+          to="/shop"
+          activeProps={{
+            style: { fontWeight: 'bold' },
+          }}
+        >
+          Shop
+        </Link>
+        <Link
+          to="/mine"
+          activeProps={{
+            style: { fontWeight: 'bold' },
+          }}
+        >
+          Mine
+        </Link>
       </Flex>
     </Flex>
   );
