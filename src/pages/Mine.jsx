@@ -1,12 +1,14 @@
-import { Flex, Image } from '@chakra-ui/react';
+import { Center, Flex, Image } from '@chakra-ui/react';
 import RunningPikachu from '../assets/pikachu-running.gif';
 
-function Home() {
+function Mine() {
   return (
-    <Flex justifyContent="center">
-      <Image src={RunningPikachu} height="200px" />
+    <Flex justifyContent="center" h="90%">
+      <Center>
+        <Image src={RunningPikachu} height="200px" />
+      </Center>
     </Flex>
   );
 }
 
-export default Home;
+export default Mine;

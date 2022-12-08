@@ -1,4 +1,4 @@
-import { Flex, Text } from '@chakra-ui/react';
+import { Box, Flex, Text } from '@chakra-ui/react';
 import { Link } from '@tanstack/react-router';
 import ThemeToggleButton from './ToggleButton';
 
@@ -11,23 +11,24 @@ const navLinks = [
 function Navbar() {
   return (
     <Flex
+      as="header"
       w="100%"
       display="flex"
       justify="space-between"
       alignItems="center"
-      mt={4}
+      py={3}
     >
-      <Flex align="flex-start">
+      <Box>
         <ThemeToggleButton />
-      </Flex>
+      </Box>
 
-      <Flex>
+      <Box>
         <Link to="/">
           <Text fontSize={['sm', 'md', 'lg']}>Pokecoin</Text>
         </Link>
-      </Flex>
+      </Box>
 
-      <Flex align="flex-end" gap={2}>
+      <Flex gap={2}>
         {navLinks.map((link) => (
           <Link
             key={link.name}

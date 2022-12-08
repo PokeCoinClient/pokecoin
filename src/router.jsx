@@ -4,7 +4,7 @@ import {
   Outlet,
 } from '@tanstack/react-router';
 import React from 'react';
-import { Container, Flex } from '@chakra-ui/react';
+import { Box, Container } from '@chakra-ui/react';
 import Home from './pages/Home';
 import Navbar from './components/Navbar';
 import Shop from './pages/Shop';
@@ -13,11 +13,11 @@ import Mine from './pages/Mine';
 const rootRoute = createRouteConfig({
   component: () => {
     return (
-      <Container maxW="container.xl" h="100%">
+      <Container maxW="container.xl">
         <Navbar />
-        <Flex justifyContent="space-between" h="90vh">
+        <Box h="94vh">
           <Outlet />
-        </Flex>
+        </Box>
       </Container>
     );
   },

@@ -1,6 +1,6 @@
 import { Heading } from '@chakra-ui/react';
 
-function Home() {
+function Shop() {
   return (
     <div className="App">
       <Heading>Shop</Heading>
@@ -8,4 +8,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default Shop;
