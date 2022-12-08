@@ -10,10 +10,7 @@ import Navbar from './components/Navbar';
 import Shop from './pages/Shop';
 import Mine from './pages/Mine';
 
-const rootRoute = createRouteConfig();
-
-const layoutRoute = rootRoute.createRoute({
-  id: 'layout',
+const rootRoute = createRouteConfig({
   component: () => {
     return (
       <Container maxW="container.xl" height="98vh">
@@ -24,24 +21,22 @@ const layoutRoute = rootRoute.createRoute({
   },
 });
 
-const indexRoute = layoutRoute.createRoute({
+const indexRoute = rootRoute.createRoute({
   path: '/',
   component: Home,
 });
 
-const shopRoute = layoutRoute.createRoute({
+const shopRoute = rootRoute.createRoute({
   path: '/shop',
   component: Shop,
 });
 
-const mineRoute = layoutRoute.createRoute({
+const mineRoute = rootRoute.createRoute({
   path: '/mine',
   component: Mine,
 });
 
-const routeConfig = rootRoute.addChildren([
-  layoutRoute.addChildren([indexRoute, shopRoute, mineRoute]),
-]);
+const routeConfig = rootRoute.addChildren([indexRoute, shopRoute, mineRoute]);
 
 const router = createReactRouter({
   routeConfig,
