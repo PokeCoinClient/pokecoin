@@ -16,14 +16,15 @@ function Navbar() {
       justify="space-between"
       alignItems="center"
       mt={4}
-      h="5vh"
     >
       <Flex align="flex-start">
         <ThemeToggleButton />
       </Flex>
 
       <Flex>
-        <Text fontSize="xl">Pokecoin</Text>
+        <Link to="/">
+          <Text fontSize={['sm', 'md', 'lg']}>Pokecoin</Text>
+        </Link>
       </Flex>
 
       <Flex align="flex-end" gap={2}>
@@ -35,7 +36,7 @@ function Navbar() {
               style: { fontWeight: 'bold' },
             }}
           >
-            <Text fontSize="xl">{link.name}</Text>
+            <Text fontSize={['sm', 'md', 'lg']}>{link.name}</Text>
           </Link>
         ))}
       </Flex>

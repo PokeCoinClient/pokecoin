@@ -1,5 +1,4 @@
 import { Button, useColorMode, useColorModeValue } from '@chakra-ui/react';
-import { MoonIcon, SunIcon } from '@chakra-ui/icons';
 import { AnimatePresence, motion } from 'framer-motion';
 
 function ThemeToggleButton() {
@@ -16,10 +15,9 @@ function ThemeToggleButton() {
         transition={{ duration: 0.2 }}
       >
         <Button
-          size="sm"
+          size="xs"
           aria-label="Toggle theme"
-          colorScheme={useColorModeValue('purple', 'orange')}
-          icon={useColorModeValue(<MoonIcon />, <SunIcon />)}
+          colorScheme={useColorModeValue('blue', 'yellow')}
           onClick={toggleColorMode}
         >
           {useColorModeValue('Dark', 'Light')}
