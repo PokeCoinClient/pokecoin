@@ -9,6 +9,7 @@ import Home from './pages/Home';
 import Navbar from './components/Navbar';
 import Shop from './pages/Shop';
 import Mine from './pages/Mine';
+import Cards from './pages/Cards';
 
 const rootRoute = createRouteConfig({
   component: () => {
@@ -33,12 +34,22 @@ const shopRoute = rootRoute.createRoute({
   component: Shop,
 });
 
+const cardsRoute = rootRoute.createRoute({
+  path: '/cards',
+  component: Cards,
+});
+
 const mineRoute = rootRoute.createRoute({
   path: '/mine',
   component: Mine,
 });
 
-const routeConfig = rootRoute.addChildren([indexRoute, shopRoute, mineRoute]);
+const routeConfig = rootRoute.addChildren([
+  indexRoute,
+  shopRoute,
+  cardsRoute,
+  mineRoute,
+]);
 
 const router = createReactRouter({
   routeConfig,

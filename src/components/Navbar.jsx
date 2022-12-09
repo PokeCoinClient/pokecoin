@@ -13,6 +13,7 @@ import IconSvg from '../assets/icon.svg';
 const navLinks = [
   { name: 'Home', path: '/' },
   { name: 'Shop', path: '/shop' },
+  { name: 'Cards', path: '/cards' },
   { name: 'Mine', path: '/mine' },
 ];
 
