@@ -1,6 +1,14 @@
-import { Box, Flex, Text } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  Flex,
+  Image,
+  Text,
+  useColorModeValue,
+} from '@chakra-ui/react';
 import { Link } from '@tanstack/react-router';
 import ThemeToggleButton from './ToggleButton';
+import IconSvg from '../assets/icon.svg';
 
 const navLinks = [
   { name: 'Home', path: '/' },
@@ -19,16 +27,15 @@ function Navbar() {
       py={3}
     >
       <Box>
-        <ThemeToggleButton />
+        <Flex display="flex" gap={1}>
+          <Image src={IconSvg} height="25px" />
+          <Link to="/">
+            <Text fontSize={['sm', 'md', 'lg']}>Pokecoin</Text>
+          </Link>
+        </Flex>
       </Box>
 
-      <Box>
-        <Link to="/">
-          <Text fontSize={['sm', 'md', 'lg']}>Pokecoin</Text>
-        </Link>
-      </Box>
-
-      <Flex gap={2}>
+      <Flex display="flex" gap={[1, 2, 3]}>
         {navLinks.map((link) => (
           <Link
             key={link.name}
@@ -40,6 +47,18 @@ function Navbar() {
             <Text fontSize={['sm', 'md', 'lg']}>{link.name}</Text>
           </Link>
         ))}
+      </Flex>
+
+      <Flex gap={2}>
+        <Button
+          size="xs"
+          minW="70px"
+          aria-label="Toggle theme"
+          colorScheme={useColorModeValue('blue', 'yellow')}
+        >
+          Login
+        </Button>
+        <ThemeToggleButton />
       </Flex>
     </Flex>
   );
