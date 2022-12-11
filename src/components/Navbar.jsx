@@ -1,23 +1,21 @@
-import {
-  Box,
-  Button,
-  Flex,
-  Image,
-  Text,
-  useColorModeValue,
-} from '@chakra-ui/react';
-import { Link } from '@tanstack/react-router';
+import { Box, Button, Flex, Image, Text } from '@chakra-ui/react';
+import { Link, useRouter } from '@tanstack/react-router';
 import ThemeToggleButton from './ToggleButton';
 import IconSvg from '../assets/icon.svg';
+import Login from './Login';
+import { useAuth } from '../contexts/AuthContext';
 
 const navLinks = [
-  { name: 'Home', path: '/' },
-  { name: 'Shop', path: '/shop' },
-  { name: 'Cards', path: '/cards' },
-  { name: 'Mine', path: '/mine' },
+  { name: 'Home', path: '/', needsAuth: false },
+  { name: 'Shop', path: '/shop', needsAuth: false },
+  { name: 'Cards', path: '/cards', needsAuth: false },
+  { name: 'Mine', path: '/mine', needsAuth: true },
+  { name: 'User', path: '/user', needsAuth: true },
 ];
 
 function Navbar() {
+  const { isAuthenticated, logout } = useAuth();
+  const router = useRouter();
   return (
     <Flex
       as="header"
@@ -35,30 +33,39 @@ function Navbar() {
           </Link>
         </Flex>
       </Box>
-
       <Flex display="flex" gap={[1, 2, 3]}>
-        {navLinks.map((link) => (
-          <Link
-            key={link.name}
-            to={link.path}
-            activeProps={{
-              style: { fontWeight: 'bold' },
-            }}
-          >
-            <Text fontSize={['sm', 'md', 'lg']}>{link.name}</Text>
-          </Link>
-        ))}
+        {navLinks.map((link) => {
+          if (link.needsAuth && !isAuthenticated) {
+            return null;
+          }
+          return (
+            <Link
+              key={link.name}
+              to={link.path}
+              activeProps={{
+                style: { fontWeight: 'bold' },
+              }}
+            >
+              <Text fontSize={['sm', 'md', 'lg']}>{link.name}</Text>
+            </Link>
+          );
+        })}
       </Flex>
 
-      <Flex gap={2}>
-        <Button
-          size="xs"
-          minW="70px"
-          aria-label="Toggle theme"
-          colorScheme={useColorModeValue('blue', 'yellow')}
-        >
-          Login
-        </Button>
+      <Flex gap={2} alignItems="flex-end">
+        {isAuthenticated ? (
+          <Button
+            size="xs"
+            onClick={() => {
+              logout();
+              router.navigate({ to: '/' });
+            }}
+          >
+            Logout
+          </Button>
+        ) : (
+          <Login />
+        )}
         <ThemeToggleButton />
       </Flex>
     </Flex>
