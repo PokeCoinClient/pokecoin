@@ -1,9 +1,11 @@
 import { Box, Button, Flex, Image, Text } from '@chakra-ui/react';
 import { Link, useRouter } from '@tanstack/react-router';
+import { useQuery } from '@tanstack/react-query';
 import ThemeToggleButton from './ToggleButton';
 import IconSvg from '../assets/icon.svg';
 import Login from './Login';
 import { useAuth } from '../contexts/AuthContext';
+import axios from '../api/axios';
 
 const navLinks = [
   { name: 'Home', path: '/', needsAuth: false },
@@ -13,9 +15,25 @@ const navLinks = [
   { name: 'User', path: '/user', needsAuth: true },
 ];
 
+const getUserBalance = async (token) => {
+  const resp = await axios.get('/wallet/balance', {
+    headers: {
+      token: `${token.queryKey[1]}`,
+    },
+  });
+  return resp.data;
+};
+
 function Navbar() {
-  const { isAuthenticated, logout } = useAuth();
+  const { user, isAuthenticated, logout } = useAuth();
   const router = useRouter();
+
+  const { data: userBalance } = useQuery({
+    queryKey: ['balance', user?.token],
+    queryFn: getUserBalance,
+    enabled: !!user?.token,
+  });
+
   return (
     <Flex
       as="header"
@@ -53,6 +71,7 @@ function Navbar() {
       </Flex>
 
       <Flex gap={2} alignItems="flex-end">
+        <Text>{userBalance?.amount}</Text>
         {isAuthenticated ? (
           <Button
             size="xs"

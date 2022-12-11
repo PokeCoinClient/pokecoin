@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { ChakraProvider, ColorModeScript } from '@chakra-ui/react';
 import { RouterProvider } from '@tanstack/react-router';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import theme from './theme';
 import router from './router';
 import { AuthProvider } from './contexts/AuthContext';
@@ -10,7 +11,6 @@ import { AuthProvider } from './contexts/AuthContext';
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      refetchOnWindowFocus: false,
       refetchOnmount: false,
       refetchOnReconnect: false,
       retry: 1,
@@ -27,6 +27,7 @@ ReactDOM.createRoot(rootElement).render(
       <AuthProvider>
         <ChakraProvider theme={theme}>
           <RouterProvider router={router} />
+          <ReactQueryDevtools initialIsOpen={false} />
         </ChakraProvider>
       </AuthProvider>
     </QueryClientProvider>

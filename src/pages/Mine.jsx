@@ -6,12 +6,73 @@ import {
   Text,
   useColorModeValue,
 } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import RunningPikachu from '../assets/pikachu-running.gif';
 import SleepingPikachu from '../assets/pikachu-sleeping.gif';
+import axios from '../api/axios';
+import { useAuth } from '../contexts/AuthContext';
+import useWorker from '../workers/workerHooks';
+
+const getLastBlock = async () => {
+  const resp = await axios.get('/blockchain/lastBlock');
+  return resp.data;
+};
+
+const getCurrentDifficulty = async () => {
+  const resp = await axios.get('/blockchain/currentDifficulty');
+  return resp.data;
+};
+
+const postBlock = async ({ data, token }) => {
+  const resp = await axios.post('/blockchain/blocks', data, {
+    headers: {
+      token: `${token}`,
+    },
+  });
+  return resp.data;
+};
 
 function Mine() {
+  const queryClient = useQueryClient();
   const [isRunning, setIsRunning] = useState(false);
+  const [data, setData] = useState(null);
+  const { user } = useAuth();
+
+  const { data: lastBlock } = useQuery({
+    queryKey: ['lastBlock'],
+    queryFn: getLastBlock,
+  });
+
+  const { data: currentDifficulty } = useQuery({
+    queryKey: ['currentDifficulty'],
+    queryFn: getCurrentDifficulty,
+  });
+
+  const { mutate: postBlockHash } = useMutation(['postBlockHash'], postBlock, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['lastBlock']);
+      queryClient.invalidateQueries(['balance', user?.token]);
+    },
+  });
+
+  const { workerApi } = useWorker();
+  useEffect(() => {
+    if (isRunning) {
+      setData({ isCalculating: true, result: undefined });
+      workerApi.mine(lastBlock.hash, currentDifficulty).then((x) => {
+        setData({ isCalculating: false, result: x });
+        postBlockHash({ data: x, token: user?.token });
+      });
+    }
+  }, [
+    isRunning,
+    workerApi,
+    lastBlock,
+    currentDifficulty,
+    user?.token,
+    postBlockHash,
+  ]);
 
   return (
     <Flex justifyContent="center" h="90%">
@@ -29,6 +90,7 @@ function Mine() {
           >
             <Text>{isRunning ? 'Stop Mining' : 'Start Mining'}</Text>
           </Button>
+          <Text>{JSON.stringify(data)}</Text>
         </Flex>
       </Center>
     </Flex>
