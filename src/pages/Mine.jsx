@@ -12,7 +12,7 @@ import RunningPikachu from '../assets/pikachu-running.gif';
 import SleepingPikachu from '../assets/pikachu-sleeping.gif';
 import axios from '../api/axios';
 import { useAuth } from '../contexts/AuthContext';
-import useWorker from '../workers/workerHooks';
+import makeWorkerApiAndCleanup from '../workers/workerHooks';
 
 const getLastBlock = async () => {
   const resp = await axios.get('/blockchain/lastBlock');
@@ -56,8 +56,8 @@ function Mine() {
     },
   });
 
-  const { workerApi } = useWorker();
   useEffect(() => {
+    const { workerApi, cleanup } = makeWorkerApiAndCleanup();
     if (isRunning) {
       setData({ isCalculating: true, result: undefined });
       workerApi.mine(lastBlock.hash, currentDifficulty).then((x) => {
@@ -65,14 +65,8 @@ function Mine() {
         postBlockHash({ data: x, token: user?.token });
       });
     }
-  }, [
-    isRunning,
-    workerApi,
-    lastBlock,
-    currentDifficulty,
-    user?.token,
-    postBlockHash,
-  ]);
+    return () => cleanup();
+  }, [isRunning, lastBlock, currentDifficulty, user?.token, postBlockHash]);
 
   return (
     <Flex justifyContent="center" h="90%">

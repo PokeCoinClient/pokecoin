@@ -1,26 +1,15 @@
-import { useEffect, useMemo } from 'react';
+import * as Comlink from 'comlink';
 
 function makeWorkerApiAndCleanup() {
-  const workerApi = new ComlinkWorker(
-    new URL('./worker.js', import.meta.url),
-    {}
-  );
+  const worker = new Worker(new URL('./worker.js', import.meta.url), {
+    type: 'module',
+  });
+  const workerApi = Comlink.wrap(worker);
   const cleanup = () => {
-    workerApi.releaseProxy();
+    worker.terminate();
+    workerApi[Comlink.releaseProxy]();
   };
   return { workerApi, cleanup };
 }
 
-function useWorker() {
-  const workerApiAndCleanup = useMemo(() => makeWorkerApiAndCleanup(), []);
-  useEffect(() => {
-    const { cleanup } = workerApiAndCleanup;
-    return () => {
-      cleanup();
-    };
-  }, [workerApiAndCleanup]);
-
-  return workerApiAndCleanup;
-}
-
-export default useWorker;
+export default makeWorkerApiAndCleanup;

@@ -1,4 +1,5 @@
 import * as CryptoJS from 'crypto-js';
+import * as Comlink from 'comlink';
 
 const calculateHash = (block) => {
   const information =
@@ -8,7 +9,8 @@ const calculateHash = (block) => {
     block.nonce.toString();
   return CryptoJS.SHA256(information).toString(CryptoJS.enc.Hex);
 };
-export const mine = (previousHash, currentDifficulty) => {
+
+const mine = (previousHash, currentDifficulty) => {
   let timestamp = Date.now();
   const max = Number.MAX_SAFE_INTEGER;
   let nonce = 0;
@@ -37,3 +39,5 @@ export const mine = (previousHash, currentDifficulty) => {
   }
   return null;
 };
+
+Comlink.expose({ mine });
