@@ -50,16 +50,12 @@ function Login() {
     },
   });
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { setLogin, setUserDetails } = useAuth();
+  const { setLogin } = useAuth();
 
   const initialRef = useRef(null);
   const finalRef = useRef(null);
 
-  const { mutate: getMe } = useMutation(['me'], axiosMe, {
-    onSuccess: (data) => {
-      setUserDetails(data);
-    },
-  });
+  const { mutate: getMe } = useMutation(['me'], axiosMe, {});
 
   const { mutate: loginMutate } = useMutation(['login'], axiosLogin, {
     onSuccess: (data) => {
