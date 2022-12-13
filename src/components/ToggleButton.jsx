@@ -16,7 +16,8 @@ function ThemeToggleButton() {
       >
         <Button
           size="xs"
-          minW="70px"
+          minW="75px"
+          maxW="75px"
           aria-label="Toggle theme"
           colorScheme={useColorModeValue('blue', 'yellow')}
           onClick={toggleColorMode}

@@ -47,7 +47,7 @@ function Navbar() {
         <Flex display="flex" gap={1}>
           <Image src={IconSvg} height="25px" />
           <Link to="/">
-            <Text fontSize={['sm', 'md', 'lg']}>Pokecoin</Text>
+            <Text fontSize={['sm', 'md']}>Pokecoin</Text>
           </Link>
         </Flex>
       </Box>
@@ -64,7 +64,7 @@ function Navbar() {
                 style: { fontWeight: 'bold' },
               }}
             >
-              <Text fontSize={['sm', 'md', 'lg']}>{link.name}</Text>
+              <Text fontSize={['sm', 'md']}>{link.name}</Text>
             </Link>
           );
         })}

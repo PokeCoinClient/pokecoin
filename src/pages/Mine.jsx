@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Center,
   Flex,
@@ -64,6 +65,8 @@ function Mine() {
         setData({ isCalculating: false, result: x });
         postBlockHash({ data: x, token: user?.token });
       });
+    } else {
+      cleanup();
     }
     return () => cleanup();
   }, [isRunning, lastBlock, currentDifficulty, user?.token, postBlockHash]);
@@ -72,19 +75,21 @@ function Mine() {
     <Flex justifyContent="center" h="90%">
       <Center>
         <Flex flexDirection="column" gap={2}>
-          {isRunning ? (
-            <Image src={RunningPikachu} height="200px" width="250px" />
-          ) : (
-            <Image src={SleepingPikachu} height="200px" width="250px" />
-          )}
+          <Box position="relative">
+            <Image
+              src={isRunning ? RunningPikachu : SleepingPikachu}
+              height="300px"
+              width="350px"
+            />
+          </Box>
 
           <Button
+            size="md"
             onClick={() => setIsRunning(!isRunning)}
             colorScheme={useColorModeValue('blue', 'yellow')}
           >
             <Text>{isRunning ? 'Stop Mining' : 'Start Mining'}</Text>
           </Button>
-          <Text>{JSON.stringify(data)}</Text>
         </Flex>
       </Center>
     </Flex>

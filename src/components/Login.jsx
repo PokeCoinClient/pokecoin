@@ -15,6 +15,7 @@ import {
   ModalOverlay,
   useColorModeValue,
   useDisclosure,
+  useToast,
 } from '@chakra-ui/react';
 import { useRef } from 'react';
 import { useForm } from 'react-hook-form';
@@ -24,6 +25,11 @@ import axios from '../api/axios';
 
 const axiosLogin = async (data) => {
   const resp = await axios.post('/auth/login', data);
+  return resp.data;
+};
+
+const axiosRegister = async (data) => {
+  const resp = await axios.post('/auth/register', data);
   return resp.data;
 };
 
@@ -50,6 +56,7 @@ function Login() {
     },
   });
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const toast = useToast();
   const { setLogin } = useAuth();
 
   const initialRef = useRef(null);
@@ -62,6 +69,14 @@ function Login() {
       setLogin(data?.token);
       onClose();
       getMe(data?.token);
+      toast({
+        title: 'Logged in.',
+        description: 'You are now logged in.',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+        position: 'bottom-right',
+      });
     },
     onError: (data) => {
       let errField;
@@ -69,6 +84,30 @@ function Login() {
         errField = 'username';
       } else if (data.response.data?.code === 'PasswordIncorrectError') {
         errField = 'password';
+      }
+      setError(errField, {
+        type: 'serverError',
+        message: data.response.data?.message,
+      });
+    },
+  });
+
+  const { mutate: registerMutate } = useMutation(['register'], axiosRegister, {
+    onSuccess: () => {
+      toast({
+        title: 'Registered.',
+        description: 'You are now registered.',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+        position: 'bottom-right',
+      });
+    },
+    onError: (data) => {
+      let errField;
+      console.log(data.response.data);
+      if (data.response.data?.code === 'UserAlreadyExistsError') {
+        errField = 'username';
       }
       setError(errField, {
         type: 'serverError',
@@ -114,7 +153,7 @@ function Login() {
                 </FormControl>
 
                 <FormControl id="password" isInvalid={errors.password}>
-                  <FormLabel>password</FormLabel>
+                  <FormLabel>Password</FormLabel>
                   <Input
                     type="password"
                     autoComplete="true"
@@ -145,7 +184,7 @@ function Login() {
 
                 <Button
                   size={['xs', 'sm']}
-                  type="submit"
+                  onClick={handleSubmit((data) => registerMutate(data))}
                   colorScheme="blue"
                   mr={3}
                 >
