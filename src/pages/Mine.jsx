@@ -15,7 +15,7 @@ import Pokemon1 from '../assets/pokemon1.gif';
 import axios from '../api/axios';
 import { useAuth } from '../contexts/AuthContext';
 import makeWorkerApiAndCleanup from '../workers/workerHooks';
-import usePageVisibility from '../hoks/usePageVisibility';
+import usePageVisibility from '../hooks/usePageVisibility';
 
 const getLastBlock = async () => {
   const resp = await axios.get('/blockchain/lastBlock');
@@ -36,24 +36,10 @@ const postBlock = async ({ data, token }) => {
   return resp.data;
 };
 
-function Mine() {
+const usePostBlock = () => {
   const queryClient = useQueryClient();
-  const [isRunning, setIsRunning] = useState(false);
-  const [data, setData] = useState(null);
   const { user } = useAuth();
   const toast = useToast();
-  const pageVisibilityStatus = usePageVisibility();
-
-  const { data: lastBlock } = useQuery({
-    queryKey: ['lastBlock'],
-    queryFn: getLastBlock,
-  });
-
-  const { data: currentDifficulty } = useQuery({
-    queryKey: ['currentDifficulty'],
-    queryFn: getCurrentDifficulty,
-  });
-
   const { mutate: postBlockHash } = useMutation(['postBlockHash'], postBlock, {
     onSuccess: () => {
       queryClient.invalidateQueries(['lastBlock']);
@@ -78,6 +64,32 @@ function Mine() {
       });
     },
   });
+  return postBlockHash;
+};
+
+const useGetLastBlock = () => {
+  return useQuery({
+    queryKey: ['lastBlock'],
+    queryFn: getLastBlock,
+  });
+};
+
+const useGetCurrentDifficulty = () => {
+  return useQuery({
+    queryKey: ['currentDifficulty'],
+    queryFn: getCurrentDifficulty,
+  });
+};
+
+function Mine() {
+  const [isRunning, setIsRunning] = useState(false);
+  const [data, setData] = useState(null);
+  const { user } = useAuth();
+  const pageVisibilityStatus = usePageVisibility();
+
+  const mutatePostBlock = usePostBlock();
+  const { data: lastBlock } = useGetLastBlock();
+  const { data: currentDifficulty } = useGetCurrentDifficulty();
 
   useEffect(() => {
     const { workerApi, cleanup } = makeWorkerApiAndCleanup();
@@ -85,7 +97,7 @@ function Mine() {
       setData({ isCalculating: true, result: undefined });
       workerApi.mine(lastBlock.hash, currentDifficulty).then((x) => {
         setData({ isCalculating: false, result: x });
-        postBlockHash({ data: x, token: user?.token });
+        mutatePostBlock({ data: x, token: user?.token });
       });
     } else if (isRunning && pageVisibilityStatus) {
       setData({ isCalculating: false, result: undefined });
@@ -100,7 +112,7 @@ function Mine() {
     lastBlock,
     currentDifficulty,
     user?.token,
-    postBlockHash,
+    mutatePostBlock,
     pageVisibilityStatus,
   ]);
 
