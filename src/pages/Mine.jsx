@@ -40,7 +40,7 @@ const usePostBlock = () => {
   const queryClient = useQueryClient();
   const { user } = useAuth();
   const toast = useToast();
-  const mutation = useMutation(['postBlockHash'], postBlock, {
+  return useMutation(['postBlockHash'], postBlock, {
     onSuccess: () => {
       queryClient.invalidateQueries(['lastBlock']);
       queryClient.invalidateQueries(['balance', user?.token]);
@@ -64,7 +64,6 @@ const usePostBlock = () => {
       });
     },
   });
-  return mutation;
 };
 
 const useGetLastBlock = () => {

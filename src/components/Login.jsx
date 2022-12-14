@@ -2,12 +2,6 @@ import {
   Box,
   Button,
   Flex,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Input,
-  InputGroup,
-  InputRightElement,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -19,11 +13,12 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react';
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
 import { useAuth } from '../contexts/AuthContext';
 import axios from '../api/axios';
+import InputField from './InputField';
 
 const axiosLogin = async (data) => {
   const resp = await axios.post('/auth/login', data);
@@ -44,36 +39,10 @@ const axiosMe = async (token) => {
   return resp.data;
 };
 
-function InputField({ register, errors, name, label, isPassword = false }) {
-  const [show, setShow] = useState(false);
-  const handleClick = () => setShow(!show);
-
-  return (
-    <FormControl isInvalid={errors[name]}>
-      <FormLabel htmlFor={name}>{label}</FormLabel>
-      <InputGroup size="md">
-        <Input
-          {...register(name, { required: true })}
-          type={isPassword && (show ? 'text' : 'password')}
-        />
-        {isPassword && (
-          <InputRightElement width="4.5rem">
-            <Button h="1.75rem" size="sm" onClick={handleClick}>
-              {show ? 'Hide' : 'Show'}
-            </Button>
-          </InputRightElement>
-        )}
-      </InputGroup>
-      <FormErrorMessage>{errors[name]?.message}</FormErrorMessage>
-    </FormControl>
-  );
-}
-
 function Login() {
   const {
     register,
     handleSubmit,
-    control,
     setError,
     reset,
     formState: { errors },
@@ -142,10 +111,6 @@ function Login() {
     },
   });
 
-  const onSubmit = (data) => {
-    loginMutate(data);
-  };
-
   return (
     <>
       <Button size="xs" onClick={onOpen}>
@@ -163,7 +128,7 @@ function Login() {
         <ModalContent backgroundColor={useColorModeValue('#fff', '#202023')}>
           <ModalHeader>Sign In</ModalHeader>
           <ModalCloseButton />
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form onSubmit={handleSubmit((data) => loginMutate(data))}>
             <ModalBody>
               <Flex flexDirection="column" gap={5}>
                 <InputField
