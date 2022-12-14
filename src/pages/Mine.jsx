@@ -40,7 +40,7 @@ const usePostBlock = () => {
   const queryClient = useQueryClient();
   const { user } = useAuth();
   const toast = useToast();
-  const { mutate: postBlockHash } = useMutation(['postBlockHash'], postBlock, {
+  const mutation = useMutation(['postBlockHash'], postBlock, {
     onSuccess: () => {
       queryClient.invalidateQueries(['lastBlock']);
       queryClient.invalidateQueries(['balance', user?.token]);
@@ -64,7 +64,7 @@ const usePostBlock = () => {
       });
     },
   });
-  return postBlockHash;
+  return mutation;
 };
 
 const useGetLastBlock = () => {
@@ -87,7 +87,7 @@ function Mine() {
   const { user } = useAuth();
   const pageVisibilityStatus = usePageVisibility();
 
-  const mutatePostBlock = usePostBlock();
+  const { mutate: mutatePostBlock } = usePostBlock();
   const { data: lastBlock } = useGetLastBlock();
   const { data: currentDifficulty } = useGetCurrentDifficulty();
 
