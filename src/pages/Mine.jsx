@@ -6,11 +6,12 @@ import {
   Image,
   Text,
   useColorModeValue,
+  useToast,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import RunningPikachu from '../assets/pikachu-running.gif';
 import SleepingPikachu from '../assets/pikachu-sleeping.gif';
+import Pokemon1 from '../assets/pokemon1.gif';
 import axios from '../api/axios';
 import { useAuth } from '../contexts/AuthContext';
 import makeWorkerApiAndCleanup from '../workers/workerHooks';
@@ -39,6 +40,7 @@ function Mine() {
   const [isRunning, setIsRunning] = useState(false);
   const [data, setData] = useState(null);
   const { user } = useAuth();
+  const toast = useToast();
 
   const { data: lastBlock } = useQuery({
     queryKey: ['lastBlock'],
@@ -54,6 +56,24 @@ function Mine() {
     onSuccess: () => {
       queryClient.invalidateQueries(['lastBlock']);
       queryClient.invalidateQueries(['balance', user?.token]);
+      toast({
+        title: 'Block mined.',
+        description: 'You mined a block.',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+        position: 'bottom-right',
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: 'Error.',
+        description: error?.response?.data?.message,
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+        position: 'bottom-right',
+      });
     },
   });
 
@@ -77,14 +97,13 @@ function Mine() {
         <Flex flexDirection="column" gap={2}>
           <Box position="relative">
             <Image
-              src={isRunning ? RunningPikachu : SleepingPikachu}
-              height="300px"
-              width="350px"
+              src={isRunning ? Pokemon1 : SleepingPikachu}
+              height="200px"
             />
           </Box>
 
           <Button
-            size="md"
+            size="sm"
             onClick={() => setIsRunning(!isRunning)}
             colorScheme={useColorModeValue('blue', 'yellow')}
           >

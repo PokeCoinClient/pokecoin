@@ -6,6 +6,8 @@ import {
   FormErrorMessage,
   FormLabel,
   Input,
+  InputGroup,
+  InputRightElement,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -17,7 +19,7 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
 import { useAuth } from '../contexts/AuthContext';
@@ -41,6 +43,31 @@ const axiosMe = async (token) => {
   });
   return resp.data;
 };
+
+function InputField({ register, errors, name, label, isPassword = false }) {
+  const [show, setShow] = useState(false);
+  const handleClick = () => setShow(!show);
+
+  return (
+    <FormControl isInvalid={errors[name]}>
+      <FormLabel htmlFor={name}>{label}</FormLabel>
+      <InputGroup size="md">
+        <Input
+          {...register(name, { required: true })}
+          type={isPassword && (show ? 'text' : 'password')}
+        />
+        {isPassword && (
+          <InputRightElement width="4.5rem">
+            <Button h="1.75rem" size="sm" onClick={handleClick}>
+              {show ? 'Hide' : 'Show'}
+            </Button>
+          </InputRightElement>
+        )}
+      </InputGroup>
+      <FormErrorMessage>{errors[name]?.message}</FormErrorMessage>
+    </FormControl>
+  );
+}
 
 function Login() {
   const {
@@ -105,7 +132,6 @@ function Login() {
     },
     onError: (data) => {
       let errField;
-      console.log(data.response.data);
       if (data.response.data?.code === 'UserAlreadyExistsError') {
         errField = 'username';
       }
@@ -140,35 +166,19 @@ function Login() {
           <form onSubmit={handleSubmit(onSubmit)}>
             <ModalBody>
               <Flex flexDirection="column" gap={5}>
-                <FormControl id="username" isInvalid={errors.username}>
-                  <FormLabel>Username</FormLabel>
-                  <Input
-                    {...register('username', {
-                      required: { value: true, message: 'This is required.' },
-                    })}
-                  />
-                  <FormErrorMessage>
-                    {errors.username?.message}
-                  </FormErrorMessage>
-                </FormControl>
-
-                <FormControl id="password" isInvalid={errors.password}>
-                  <FormLabel>Password</FormLabel>
-                  <Input
-                    type="password"
-                    autoComplete="true"
-                    {...register('password', {
-                      required: { value: true, message: 'This is required.' },
-                    })}
-                  />
-                  <FormErrorMessage>
-                    {errors.password?.message}
-                  </FormErrorMessage>
-                </FormControl>
-
-                <FormErrorMessage>
-                  {JSON.stringify(errors.username?.serverError)}
-                </FormErrorMessage>
+                <InputField
+                  register={register}
+                  errors={errors}
+                  name="username"
+                  label="username"
+                />
+                <InputField
+                  register={register}
+                  errors={errors}
+                  name="password"
+                  label="password"
+                  isPassword
+                />
               </Flex>
             </ModalBody>
             <ModalFooter justifyContent="space-between">

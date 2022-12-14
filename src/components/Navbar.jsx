@@ -1,6 +1,7 @@
 import { Box, Button, Flex, Image, Text } from '@chakra-ui/react';
 import { Link, useRouter } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
+import { motion } from 'framer-motion';
 import ThemeToggleButton from './ToggleButton';
 import IconSvg from '../assets/icon.svg';
 import Login from './Login';
@@ -44,14 +45,14 @@ function Navbar() {
       py={3}
     >
       <Box>
-        <Flex display="flex" gap={1}>
+        <Flex display="flex" gap={1} alignItems="center">
           <Image src={IconSvg} height="25px" />
           <Link to="/">
-            <Text fontSize={['sm', 'md']}>Pokecoin</Text>
+            <Text fontSize={['sm', 'sm', 'md']}>Pokecoin</Text>
           </Link>
         </Flex>
       </Box>
-      <Flex display="flex" gap={[1, 2, 3]}>
+      <Flex display="flex" gap={[1, 2, 3]} alignItems="center">
         {navLinks.map((link) => {
           if (link.needsAuth && !isAuthenticated) {
             return null;
@@ -64,26 +65,32 @@ function Navbar() {
                 style: { fontWeight: 'bold' },
               }}
             >
-              <Text fontSize={['sm', 'md']}>{link.name}</Text>
+              <Text fontSize={['sm', 'sm', 'md']}>{link.name}</Text>
             </Link>
           );
         })}
       </Flex>
 
-      <Flex gap={2} alignItems="flex-end">
-        <Text>{userBalance?.amount}</Text>
+      <Flex gap={2} alignItems="center">
+        <Text fontSize={['sm', 'sm', 'md']}>{userBalance?.amount}</Text>
         {isAuthenticated ? (
-          <Button
-            size="xs"
-            onClick={() => {
-              logout();
-              router.navigate({ to: '/' });
-            }}
-          >
-            Logout
-          </Button>
+          <motion.div>
+            <Button
+              size="xs"
+              minW="75px"
+              maxW="75px"
+              onClick={() => {
+                logout();
+                router.navigate({ to: '/' });
+              }}
+            >
+              Logout
+            </Button>
+          </motion.div>
         ) : (
-          <Login />
+          <motion.div>
+            <Login />
+          </motion.div>
         )}
         <ThemeToggleButton />
       </Flex>

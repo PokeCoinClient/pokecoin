@@ -16,7 +16,7 @@ const styles = {
 
 const fonts = {
   heading: `Silkscreen`,
-  body: `'Press Start 2P', sans-serif`,
+  body: `Silkscreen`,
 };
 
 const theme = extendTheme({ config, fonts, styles });
