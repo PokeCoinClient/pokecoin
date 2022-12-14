@@ -15,6 +15,7 @@ import Pokemon1 from '../assets/pokemon1.gif';
 import axios from '../api/axios';
 import { useAuth } from '../contexts/AuthContext';
 import makeWorkerApiAndCleanup from '../workers/workerHooks';
+import usePageVisibility from '../hoks/usePageVisibility';
 
 const getLastBlock = async () => {
   const resp = await axios.get('/blockchain/lastBlock');
@@ -41,6 +42,7 @@ function Mine() {
   const [data, setData] = useState(null);
   const { user } = useAuth();
   const toast = useToast();
+  const pageVisibilityStatus = usePageVisibility();
 
   const { data: lastBlock } = useQuery({
     queryKey: ['lastBlock'],
@@ -79,17 +81,28 @@ function Mine() {
 
   useEffect(() => {
     const { workerApi, cleanup } = makeWorkerApiAndCleanup();
-    if (isRunning) {
+    if (isRunning && !pageVisibilityStatus) {
       setData({ isCalculating: true, result: undefined });
       workerApi.mine(lastBlock.hash, currentDifficulty).then((x) => {
         setData({ isCalculating: false, result: x });
         postBlockHash({ data: x, token: user?.token });
       });
+    } else if (isRunning && pageVisibilityStatus) {
+      setData({ isCalculating: false, result: undefined });
+      setIsRunning(false);
+      cleanup();
     } else {
       cleanup();
     }
     return () => cleanup();
-  }, [isRunning, lastBlock, currentDifficulty, user?.token, postBlockHash]);
+  }, [
+    isRunning,
+    lastBlock,
+    currentDifficulty,
+    user?.token,
+    postBlockHash,
+    pageVisibilityStatus,
+  ]);
 
   return (
     <Flex justifyContent="center" h="90%">
