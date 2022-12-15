@@ -11,6 +11,7 @@ const calculateHash = (block) => {
 };
 
 const mine = (previousHash, currentDifficulty) => {
+  console.log('mining...');
   let timestamp = Date.now();
   const max = Number.MAX_SAFE_INTEGER;
   let nonce = 0;

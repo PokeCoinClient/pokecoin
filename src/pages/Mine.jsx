@@ -8,7 +8,7 @@ import {
   useColorModeValue,
   useToast,
 } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import SleepingPikachu from '../assets/pikachu-sleeping.gif';
 import Pokemon1 from '../assets/pokemon1.gif';
@@ -82,7 +82,6 @@ const useGetCurrentDifficulty = () => {
 
 function Mine() {
   const [isRunning, setIsRunning] = useState(false);
-  const [data, setData] = useState(null);
   const { user } = useAuth();
   const pageVisibilityStatus = usePageVisibility();
 
@@ -90,30 +89,28 @@ function Mine() {
   const { data: lastBlock } = useGetLastBlock();
   const { data: currentDifficulty } = useGetCurrentDifficulty();
 
+  const workerRef = useRef(null);
+
   useEffect(() => {
-    const { workerApi, cleanup } = makeWorkerApiAndCleanup();
-    if (isRunning && !pageVisibilityStatus) {
-      setData({ isCalculating: true, result: undefined });
-      workerApi.mine(lastBlock.hash, currentDifficulty).then((x) => {
-        setData({ isCalculating: false, result: x });
-        mutatePostBlock({ data: x, token: user?.token });
-      });
-    } else if (isRunning && pageVisibilityStatus) {
-      setData({ isCalculating: false, result: undefined });
-      setIsRunning(false);
-      cleanup();
-    } else {
-      cleanup();
+    if (isRunning && workerRef.current == null) {
+      workerRef.current = makeWorkerApiAndCleanup();
+      workerRef.current.workerApi
+        .mine(lastBlock.hash, currentDifficulty)
+        .then((res) => {
+          mutatePostBlock({ data: res, token: user?.token });
+        });
     }
-    return () => cleanup();
-  }, [
-    isRunning,
-    lastBlock,
-    currentDifficulty,
-    user?.token,
-    mutatePostBlock,
-    pageVisibilityStatus,
-  ]);
+  }, [currentDifficulty, isRunning, lastBlock, mutatePostBlock, user?.token]);
+
+  useEffect(() => {
+    if (pageVisibilityStatus || !isRunning) {
+      if (workerRef.current) {
+        workerRef.current.cleanup();
+        workerRef.current = null;
+        setIsRunning(false);
+      }
+    }
+  }, [isRunning, pageVisibilityStatus]);
 
   return (
     <Flex justifyContent="center" h="90%">
