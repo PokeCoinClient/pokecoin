@@ -98,6 +98,8 @@ function Mine() {
         .mine(lastBlock.hash, currentDifficulty)
         .then((res) => {
           mutatePostBlock({ data: res, token: user?.token });
+          workerRef.current.cleanup();
+          workerRef.current = null;
         });
     }
   }, [currentDifficulty, isRunning, lastBlock, mutatePostBlock, user?.token]);
@@ -116,6 +118,17 @@ function Mine() {
     <Flex justifyContent="center" h="90%">
       <Center>
         <Flex flexDirection="column" gap={2}>
+          {lastBlock && (
+            <>
+              <Text fontSize="xl">
+                Last block hash: {lastBlock.hash.substring(0, 10)}...
+              </Text>
+              <Text fontSize="xl">
+                Last block found:{' '}
+                {new Date(lastBlock.timestamp).toLocaleString()}
+              </Text>
+            </>
+          )}
           <Box position="relative">
             <Image
               src={isRunning ? Pokemon1 : SleepingPikachu}
