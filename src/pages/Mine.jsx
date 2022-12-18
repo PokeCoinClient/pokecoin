@@ -114,6 +114,10 @@ function Mine() {
     }
   }, [isRunning, pageVisibilityStatus]);
 
+  useEffect(() => {
+    return () => workerRef?.current?.cleanup();
+  }, []);
+
   return (
     <Flex justifyContent="center" h="90%">
       <Center>
