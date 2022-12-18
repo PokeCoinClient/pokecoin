@@ -25,7 +25,6 @@ import { useAuth } from './contexts/AuthContext';
 import Mine from './pages/Mine';
 import ChangePassword from './pages/user/ChangePassword';
 import User from './pages/user/User';
-import changePassword from './pages/user/ChangePassword';
 
 const rootRoute = createRouteConfig({
   component: () => {
@@ -101,7 +100,7 @@ const profileLayoutRoute = rootRoute.createRoute({
         alignItems="flex-start"
         minHeight="100%"
         divider={<StackDivider borderColor="gray" />}
-        spacing={10}
+        spacing={5}
       >
         <VStack w="15%" alignItems="flex-start">
           {userPages.map((page) => {
@@ -109,6 +108,7 @@ const profileLayoutRoute = rootRoute.createRoute({
               <Link
                 to={page.path}
                 key={page.name}
+                activeOptions={{ exact: true }}
                 activeProps={{
                   style: { fontWeight: 'bold' },
                 }}

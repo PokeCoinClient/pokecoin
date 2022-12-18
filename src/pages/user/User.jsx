@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '../../contexts/AuthContext';
 import axios from '../../api/axios';
 
-export const axiosMe = async (token) => {
+const axiosMe = async (token) => {
   const resp = await axios.get('/auth/me', {
     headers: {
       token: `${token.queryKey[1]}`,
