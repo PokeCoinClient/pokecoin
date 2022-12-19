@@ -1,7 +1,8 @@
-import { Button, Flex, Heading, Image, Text } from '@chakra-ui/react';
-import { useQuery } from '@tanstack/react-query';
+import {Button, Flex, Heading, Image, Text, useToast} from '@chakra-ui/react';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import axios from '../api/axios';
 import card from '../assets/pokemon-card-backside.jpg';
+import { useAuth } from '../contexts/AuthContext';
 
 const getCardPackages = async () => {
   const resp = await axios.get('/cards/packages');
@@ -10,6 +11,20 @@ const getCardPackages = async () => {
 
 const getCurrentPackage = async ({ name }) => {
   const resp = await axios.get(`/cards/packages/${name}`);
+  return resp.data;
+};
+
+const buyPackageByName = async (data, token) => {
+  console.log(data, token);
+  const resp = await axios.get(
+    `/cards/packages/${data}/buyDefaultPackage`,
+    data,
+    {
+      headers: {
+        token: `${token}`,
+      },
+    }
+  );
   return resp.data;
 };
 
@@ -22,6 +37,25 @@ const useGetPackages = () => {
 
 function Shop() {
   const { data: cardPackages } = useGetPackages();
+  const { user } = useAuth();
+  const toast = useToast();
+  const { mutate: buyPackageMutate } = useMutation(
+    ['buyPackage'],
+    buyPackageByName,
+    {
+      onSuccess: (data) => {
+        toast({
+          title: 'Logged in.',
+          description: 'You are now logged in.',
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+          position: 'bottom-right',
+        });
+      },
+    }
+  );
+
   return (
     <div className="App">
       <Heading>Shop</Heading>
@@ -30,7 +64,7 @@ function Shop() {
           return (
             <Button
               key={currentCard}
-              onClick={() => getCurrentPackage({ currentCard })}
+              onClick={() => buyPackageMutate(currentCard, user?.token)}
             >
               {currentCard}
             </Button>
