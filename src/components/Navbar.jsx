@@ -13,7 +13,7 @@ const navLinks = [
   { name: 'Shop', path: '/shop', needsAuth: false },
   { name: 'Cards', path: '/cards', needsAuth: false },
   { name: 'Mine', path: '/mine', needsAuth: true },
-  { name: 'User', path: '/user', needsAuth: true },
+  { name: 'User', path: '/profile', needsAuth: true },
 ];
 
 const getUserBalance = async (token) => {

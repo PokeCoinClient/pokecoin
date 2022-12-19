@@ -114,10 +114,14 @@ function Mine() {
     }
   }, [isRunning, pageVisibilityStatus]);
 
+  useEffect(() => {
+    return () => workerRef?.current?.cleanup();
+  }, []);
+
   return (
     <Flex justifyContent="center" h="90%">
       <Center>
-        <Flex flexDirection="column" gap={2}>
+        <Flex flexDirection="column" gap={2} alignItems="center">
           {lastBlock && (
             <>
               <Text fontSize="xl">
