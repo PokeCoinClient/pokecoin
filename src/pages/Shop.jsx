@@ -25,7 +25,6 @@ const getCurrentPackagePrice = async () => {
 };
 
 const buyPackageByName = async (data, token) => {
-  console.log(data, token);
   const resp = await axios.get(`/cards/packages/${data}/buyDefaultPackage`, {
     headers: {
       token: `${token}`,
@@ -80,13 +79,8 @@ function Shop() {
     <Box>
       <Heading>Shop</Heading>
       <SimpleGrid columns={[1, 2, 3]} justifyItems="center">
-        <Box
-          width="216.44px"
-          as={motion.div}
-          whileHover={{ scale: 1.05 }}
-          cursor="pointer"
-        >
-          <Image src={card} height="300px" />
+        <Box width="216.44px" cursor="pointer">
+          <Image src={card} height="300px" filter="grayscale(1)" />
           <Flex>
             <Text textAlign="center">Sold out!</Text>
             <Spacer />
@@ -115,13 +109,8 @@ function Shop() {
             </Box>
           );
         })}
-        <Box
-          width="216.44px"
-          as={motion.div}
-          whileHover={{ scale: 1.05 }}
-          cursor="pointer"
-        >
-          <Image src={card} height="300px" />
+        <Box width="216.44px" cursor="pointer">
+          <Image src={card} height="300px" filter="grayscale(1)" />
           <Flex>
             <Text textAlign="center">Sold out!</Text>
             <Spacer />
