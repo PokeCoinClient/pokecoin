@@ -11,17 +11,12 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import axios from '../api/axios';
 
 const getCards = async (data) => {
-  console.log(data);
-  const resp = await axios.get(`/cards?page=${1}`);
+  const resp = await axios.get(`/cards?page=${data}`);
   return resp.data;
-};
-
-const useGetCards = () => {
-  return useQuery(['cards'], (data) => getCards(data));
 };
 
 const viewDetails = () => {
@@ -29,10 +24,8 @@ const viewDetails = () => {
 };
 
 function CardsTable(data) {
-  const { page } = data;
-  const { data: cards } = useGetCards();
-  console.log(page);
-  // () => cards(page)
+  const { cards } = data;
+  console.log(cards);
   return (
     <SimpleGrid columns={[1, 2, 3]} justifyItems="center">
       {cards?.cards.map((card) => {
@@ -47,23 +40,46 @@ function CardsTable(data) {
   );
 }
 
+// TODO make use of useMemo for less rerendering
 function Shop() {
-  const [page, setPage] = useState(10);
+  const [page, setPage] = useState(0);
+  const [search, setSearch] = useState('');
+
+  const onSetSearch = useCallback((evt) => setSearch(evt.target.value), []);
+
+  const { data: cards } = useQuery({
+    queryKey: ['cards', page],
+    queryFn: () => getCards(page),
+  });
+
+  // TODO implement search
+  useEffect(() => {
+    cards?.cards.filter((c) => c.name.includes(search));
+  }, [cards, search]);
+
   return (
     <Box>
       <Heading>Cards</Heading>
       <Flex>
         <InputGroup m="5px">
           <InputLeftAddon children="Name" />
-          <Input placeholder="Pikachu" />
-        </InputGroup>
-        <InputGroup m="5px">
-          <InputLeftAddon children="Name" />
-          <Input placeholder="Pikachu" />
+          <Input placeholder="Pikachu" value={search} onChange={onSetSearch} />
         </InputGroup>
       </Flex>
-      <CardsTable page={page} />
-      <Button onClick={() => setPage(page + 1)} />
+      <Button
+        m="5px"
+        onClick={() => (page > 0 ? setPage(page - 1) : setPage(page))}
+      >
+        Previous
+      </Button>
+      <Button
+        m="5px"
+        onClick={() => (page < 2 ? setPage(page + 1) : setPage(page))}
+      >
+        Next
+      </Button>
+
+      <CardsTable cards={cards} />
     </Box>
   );
 }
