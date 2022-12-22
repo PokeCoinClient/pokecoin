@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Flex,
   Heading,
   Image,
@@ -10,23 +11,44 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
 import axios from '../api/axios';
 
-const getCards = async () => {
-  const resp = await axios.get('/cards');
+const getCards = async (data) => {
+  console.log(data);
+  const resp = await axios.get(`/cards?page=${1}`);
   return resp.data;
 };
 
 const useGetCards = () => {
-  return useQuery({ queryKey: ['cards'], queryFn: getCards });
+  return useQuery(['cards'], (data) => getCards(data));
 };
 
 const viewDetails = () => {
   return null;
 };
 
-function Shop() {
+function CardsTable(data) {
+  const { page } = data;
   const { data: cards } = useGetCards();
+  console.log(page);
+  // () => cards(page)
+  return (
+    <SimpleGrid columns={[1, 2, 3]} justifyItems="center">
+      {cards?.cards.map((card) => {
+        return (
+          <Box key={card.id}>
+            <Image src={card.imageUrl} onClick={() => viewDetails(card)} />
+            <Text>{JSON.stringify(card.name)}</Text>
+          </Box>
+        );
+      })}
+    </SimpleGrid>
+  );
+}
+
+function Shop() {
+  const [page, setPage] = useState(10);
   return (
     <Box>
       <Heading>Cards</Heading>
@@ -40,16 +62,8 @@ function Shop() {
           <Input placeholder="Pikachu" />
         </InputGroup>
       </Flex>
-      <SimpleGrid columns={[1, 2, 3]} justifyItems="center">
-        {cards?.cards.map((card) => {
-          return (
-            <Box key={card.id}>
-              <Image src={card.imageUrl} onClick={() => viewDetails(card)} />
-              <Text>{JSON.stringify(card.name)}</Text>
-            </Box>
-          );
-        })}
-      </SimpleGrid>
+      <CardsTable page={page} />
+      <Button onClick={() => setPage(page + 1)} />
     </Box>
   );
 }
