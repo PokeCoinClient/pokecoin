@@ -3,13 +3,10 @@ import {
   Button,
   Flex,
   Heading,
-  ModalBody,
-  ModalFooter,
-  Text,
   useToast,
 } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import InputField from '../../components/InputField';
 import { useAuth } from '../../contexts/AuthContext';
 import axios from '../../api/axios.js';
