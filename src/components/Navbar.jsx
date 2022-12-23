@@ -16,7 +16,7 @@ const navLinks = [
   { name: 'User', path: '/profile', needsAuth: true },
 ];
 
-const getUserBalance = async (token) => {
+export const getUserBalance = async (token) => {
   const resp = await axios.get('/wallet/balance', {
     headers: {
       token: `${token.queryKey[1]}`,
