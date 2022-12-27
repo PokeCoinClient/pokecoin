@@ -10,9 +10,17 @@ import axios from '../api/axios';
 
 const navLinks = [
   { name: 'Home', path: '/', needsAuth: false },
-  { name: 'Shop', path: '/shop', needsAuth: false },
+  {
+    name: 'Shop',
+    path: '/shop',
+    needsAuth: false,
+  },
   { name: 'Cards', path: '/cards', needsAuth: false },
-  { name: 'Mine', path: '/mine', needsAuth: true },
+  {
+    name: 'Mine',
+    path: '/mine',
+    needsAuth: true,
+  },
   { name: 'User', path: '/profile', needsAuth: true },
 ];
 
@@ -37,41 +45,26 @@ function Navbar() {
 
   return (
     <Flex
-      as="header"
-      w="100%"
-      display="flex"
-      justify="space-between"
+      flexDir="row"
+      justifyContent="space-between"
       alignItems="center"
-      py={3}
+      h="5vh"
+      pr={3}
+      pl={3}
+      style={{
+        background: 'rgba(255, 255, 255, 0.11)',
+        boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
+        backdropFilter: ' blur(6.8px)',
+        borderRadius: '10px',
+      }}
     >
-      <Box>
-        <Flex display="flex" gap={1} alignItems="center">
-          <Image src={IconSvg} height="25px" />
-          <Link to="/">
-            <Text fontSize={['sm', 'sm', 'md']}>Pokecoin</Text>
-          </Link>
-        </Flex>
-      </Box>
-      <Flex display="flex" gap={[1, 2, 3]} alignItems="center">
-        {navLinks.map((link) => {
-          if (link.needsAuth && !isAuthenticated) {
-            return null;
-          }
-          return (
-            <Link
-              key={link.name}
-              to={link.path}
-              activeProps={{
-                style: { fontWeight: 'bold' },
-              }}
-            >
-              <Text fontSize={['sm', 'sm', 'md']}>{link.name}</Text>
-            </Link>
-          );
-        })}
+      <Flex display="flex" gap={1} alignItems="center">
+        <Image src={IconSvg} height="40px" />
+        <Link to="/">
+          <Text fontSize={['sm', 'sm', 'md']}>Pokecoin</Text>
+        </Link>
       </Flex>
-
-      <Flex gap={2} alignItems="center">
+      <Flex flex={2} justifyContent="flex-end" alignItems="center" gap={2}>
         <Text fontSize={['sm', 'sm', 'md']}>{userBalance?.amount}</Text>
         {isAuthenticated ? (
           <motion.div>
