@@ -11,7 +11,6 @@ import {
   Button,
   Center,
   Container,
-  Divider,
   Flex,
   HStack,
   StackDivider,
@@ -26,37 +25,25 @@ import { useAuth } from './contexts/AuthContext';
 import Mine from './pages/Mine';
 import ChangePassword from './pages/user/ChangePassword';
 import User from './pages/user/User';
-import Sidebar from './components/Sidebar';
 
 const rootRoute = createRouteConfig({
   component: () => {
     return (
-      <Box p={5} width={'100vw'} h={'100vh'}>
+      <Container maxW="container.xl" mt={3}>
         <Navbar />
-        <Flex
-          justifyContent={'space-between'}
-          flexDir={{ base: 'column-reverse', md: 'row' }}
-          mt={'1vh'}
-          height={'90vh'}
+        <Box
+          minH={'89vh'}
+          p={5}
+          mt={3}
+          style={{
+            background: '#f0efeb',
+            boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
+            borderRadius: '10px',
+          }}
         >
-          <Box pr={{ md: '1vw' }} pt={['1vh', '1vh', '0vh']}>
-            <Sidebar />
-          </Box>
-          <Box
-            padding={4}
-            overflow={'auto'}
-            flexGrow={1}
-            style={{
-              background: 'rgba(255, 255, 255, 0.1)',
-              boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
-              backdropFilter: 'blur(6.8px)',
-              borderRadius: '10px',
-            }}
-          >
-            <Outlet />
-          </Box>
-        </Flex>
-      </Box>
+          <Outlet />
+        </Box>
+      </Container>
     );
   },
 });

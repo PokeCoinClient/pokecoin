@@ -20,7 +20,7 @@ export default defineConfig({
       manifest,
       includeAssets: ['icon.svg'],
       devOptions: {
-        enabled: true,
+        enabled: false,
       },
     }),
   ],
