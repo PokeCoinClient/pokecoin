@@ -37,7 +37,7 @@ const rootRoute = createRouteConfig({
           justifyContent={'space-between'}
           flexDir={{ base: 'column-reverse', md: 'row' }}
           mt={'1vh'}
-          height={'95%'}
+          height={'90vh'}
         >
           <Box pr={{ md: '1vw' }} pt={['1vh', '1vh', '0vh']}>
             <Sidebar />
