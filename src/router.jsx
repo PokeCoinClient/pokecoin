@@ -29,9 +29,18 @@ import User from './pages/user/User';
 const rootRoute = createRouteConfig({
   component: () => {
     return (
-      <Container maxW="container.xl">
+      <Container maxW="container.xl" mt={3}>
         <Navbar />
-        <Box mt={4} h="90vh">
+        <Box
+          minH={'89vh'}
+          p={5}
+          mt={3}
+          style={{
+            background: '#f0efeb',
+            boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
+            borderRadius: '10px',
+          }}
+        >
           <Outlet />
         </Box>
       </Container>

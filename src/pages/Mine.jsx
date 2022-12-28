@@ -119,7 +119,7 @@ function Mine() {
   }, []);
 
   return (
-    <Flex justifyContent="center" h="90%">
+    <Flex justifyContent="center">
       <Center>
         <Flex flexDirection="column" gap={2} alignItems="center">
           {lastBlock && (

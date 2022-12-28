@@ -1,6 +1,8 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
 import { VitePluginFonts } from 'vite-plugin-fonts';
+import { VitePWA } from 'vite-plugin-pwa';
+import manifest from './manifest.json';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -12,6 +14,13 @@ export default defineConfig({
     VitePluginFonts({
       google: {
         families: ['Press Start 2P', 'Silkscreen'],
+      },
+    }),
+    VitePWA({
+      manifest,
+      includeAssets: ['icon.svg'],
+      devOptions: {
+        enabled: false,
       },
     }),
   ],

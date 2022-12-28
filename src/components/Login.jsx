@@ -113,7 +113,7 @@ function Login() {
 
   return (
     <>
-      <Button size="xs" onClick={onOpen}>
+      <Button bg="#f8d077" h="100%" size="lg" onClick={onOpen}>
         Login
       </Button>
       <Modal
