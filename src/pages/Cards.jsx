@@ -31,8 +31,8 @@ function CardsTable(data) {
       {cards?.cards.map((card) => {
         return (
           <Box key={card.id}>
-            <Image src={card.imageUrl} onClick={() => viewDetails(card)} />
             <Text>{JSON.stringify(card.name)}</Text>
+            <Image src={card.imageUrl} onClick={() => viewDetails(card)} />
           </Box>
         );
       })}
