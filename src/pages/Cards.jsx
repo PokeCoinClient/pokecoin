@@ -9,22 +9,65 @@ import {
   InputLeftAddon,
   SimpleGrid,
   Text,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useColorModeValue,
+  useDisclosure,
 } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
 import { useCallback, useEffect, useState } from 'react';
 import axios from '../api/axios';
+import InputField from '../components/InputField.jsx';
 
 const getCards = async (data) => {
   const resp = await axios.get(`/cards?page=${data}`);
   return resp.data;
 };
 
-const viewDetails = () => {
-  return null;
+const viewDetails = (card) => {
+  console.log(card);
+  return (
+    <Modal
+      size={['xs', 'sm', 'md']}
+      isCentered
+      isOpen={isOpen}
+      onClose={onClose}
+    >
+      <ModalOverlay />
+      <ModalContent backgroundColor={useColorModeValue('#fff', '#202023')}>
+        <ModalHeader>Sign In</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          <Flex flexDirection="column" gap={5}>
+            <InputField name="username" label="username" />
+            <InputField name="password" label="password" isPassword />
+          </Flex>
+        </ModalBody>
+        <ModalFooter justifyContent="space-between">
+          <Box>
+            <Button size={['xs', 'sm']} type="submit" colorScheme="blue" mr={3}>
+              Sign in
+            </Button>
+
+            <Button size={['xs', 'sm']} colorScheme="blue" mr={3}>
+              Register
+            </Button>
+          </Box>
+          <Button size={['xs', 'sm']}>Cancel</Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
+  );
 };
 
 function CardsTable(data) {
   const { cards } = data;
+  const { isOpen, onOpen, onClose } = useDisclosure();
   console.log(cards);
   return (
     <SimpleGrid columns={[1, 2, 3]} justifyItems="center">
@@ -32,7 +75,8 @@ function CardsTable(data) {
         return (
           <Box key={card.id}>
             <Text>{JSON.stringify(card.name)}</Text>
-            <Image src={card.imageUrl} onClick={() => viewDetails(card)} />
+            <Image src={card.imageUrl} />
+            <Button onClick={onOpen}>Open Modal</Button>
           </Box>
         );
       })}
