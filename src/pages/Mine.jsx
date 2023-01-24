@@ -1,21 +1,38 @@
 import {
   Box,
   Button,
-  Center,
   Flex,
   Image,
+  Spacer,
   Text,
+  Tooltip,
   useColorModeValue,
   useToast,
+  VStack,
 } from '@chakra-ui/react';
 import { useEffect, useRef, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import SleepingPikachu from '../assets/pikachu-sleeping.gif';
+import RunningPikachu from '../assets/pikachu-running.gif';
 import Pokemon1 from '../assets/pokemon1.gif';
+import Pokemon2 from '../assets/pokemon2.webp';
+import Pokemon3 from '../assets/pokemon3.gif';
+import Pokemon4 from '../assets/pokemon4.gif';
+import Pokemon5 from '../assets/pokemon5.webp';
 import axios from '../api/axios';
 import { useAuth } from '../contexts/AuthContext';
 import makeWorkerApiAndCleanup from '../workers/workerHooks';
 import usePageVisibility from '../hooks/usePageVisibility';
+import { TimeIcon } from '@chakra-ui/icons';
+
+const MiningGifs = [
+  Pokemon1,
+  RunningPikachu,
+  Pokemon2,
+  Pokemon3,
+  Pokemon4,
+  Pokemon5,
+];
 
 const getLastBlock = async () => {
   const resp = await axios.get('/blockchain/lastBlock');
@@ -82,6 +99,7 @@ const useGetCurrentDifficulty = () => {
 
 function Mine() {
   const [isRunning, setIsRunning] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
   const { user } = useAuth();
   const pageVisibilityStatus = usePageVisibility();
 
@@ -119,36 +137,90 @@ function Mine() {
   }, []);
 
   return (
-    <Flex justifyContent="center">
-      <Center>
-        <Flex flexDirection="column" gap={2} alignItems="center">
-          {lastBlock && (
-            <>
+    <Flex
+      flexDirection={{
+        base: 'column',
+        lg: 'row',
+      }}
+    >
+      <Flex
+        borderRadius={'10px'}
+        flexDirection={{
+          lg: 'column',
+        }}
+        gap={1}
+        justifyContent={'space-between'}
+        border={'1px solid #554739'}
+      >
+        {MiningGifs.map((x, idx) => {
+          return (
+            <Box
+              key={idx}
+              bg={'#ecbe4a'}
+              borderRadius={'5px'}
+              cursor="pointer"
+              border={selectedImage === x ? '1px solid #554739' : ''}
+            >
+              <Image
+                src={x}
+                width={'125px'}
+                userSelect={'none'}
+                objectFit={'cover'}
+                overflow="hidden"
+                onClick={() => setSelectedImage(x)}
+              />
+            </Box>
+          );
+        })}
+      </Flex>
+      <VStack flex={1} border={'1px solid #554739'} borderRadius={'10px'}>
+        {lastBlock && (
+          <Box pl={5} width={'100%'} justifyContent={'space-evenly'}>
+            <Text fontSize="xl">Last Block:</Text>
+            <Box display="flex" alignItems="center" gap={1}>
+              <Tooltip label={'lol'}>
+                <TimeIcon />
+              </Tooltip>
+              <Text fontSize="xl">{lastBlock.hash.substring(0, 10)}...</Text>
+            </Box>
+            <Box display="flex" alignItems="center" gap={1}>
+              <Tooltip label={'lol'}>
+                <TimeIcon />
+              </Tooltip>
               <Text fontSize="xl">
-                Last block hash: {lastBlock.hash.substring(0, 10)}...
-              </Text>
-              <Text fontSize="xl">
-                Last block found:{' '}
                 {new Date(lastBlock.timestamp).toLocaleString()}
               </Text>
-            </>
-          )}
+            </Box>
+          </Box>
+        )}
+        <Flex
+          borderTop={'3px solid #554739'}
+          borderBottom={'3px solid #554739'}
+          width={'100%'}
+          height={'100%'}
+          justifyContent={'center'}
+          flexDirection="column"
+          gap={2}
+          alignItems="center"
+        >
           <Box position="relative">
             <Image
-              src={isRunning ? Pokemon1 : SleepingPikachu}
+              src={isRunning ? selectedImage : SleepingPikachu}
               height="200px"
             />
           </Box>
-
-          <Button
-            size="sm"
-            onClick={() => setIsRunning(!isRunning)}
-            colorScheme={useColorModeValue('blue', 'yellow')}
-          >
-            <Text>{isRunning ? 'Stop Mining' : 'Start Mining'}</Text>
-          </Button>
         </Flex>
-      </Center>
+
+        <Button
+          size={['sm', 'md', 'lg']}
+          disabled={!selectedImage}
+          onClick={() => setIsRunning(!isRunning)}
+          colorScheme={useColorModeValue('blue', 'yellow')}
+        >
+          {isRunning ? 'Stop Mining' : 'Start Mining'}
+        </Button>
+        <Spacer />
+      </VStack>
     </Flex>
   );
 }

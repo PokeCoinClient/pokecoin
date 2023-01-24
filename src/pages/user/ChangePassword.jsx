@@ -1,10 +1,4 @@
-import {
-  Box,
-  Button,
-  Flex,
-  Heading,
-  useToast,
-} from '@chakra-ui/react';
+import { Box, Button, Flex, Heading, useToast } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
 import InputField from '../../components/InputField';
