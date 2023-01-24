@@ -7,67 +7,60 @@ import {
   Input,
   InputGroup,
   InputLeftAddon,
-  SimpleGrid,
-  Text,
   Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
   ModalBody,
   ModalCloseButton,
-  useColorModeValue,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  SimpleGrid,
+  Text,
   useDisclosure,
 } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
 import { useCallback, useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
 import axios from '../api/axios';
-import InputField from '../components/InputField.jsx';
 
 const getCards = async (data) => {
   const resp = await axios.get(`/cards?page=${data}`);
   return resp.data;
 };
 
-const viewDetails = (card) => {
-  console.log(card);
+function CardDetailModal({ card }) {
+  const { isOpen, onOpen, onClose } = useDisclosure();
   return (
-    <Modal
-      size={['xs', 'sm', 'md']}
-      isCentered
-      isOpen={isOpen}
-      onClose={onClose}
-    >
-      <ModalOverlay />
-      <ModalContent backgroundColor={useColorModeValue('#fff', '#202023')}>
-        <ModalHeader>Sign In</ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>
-          <Flex flexDirection="column" gap={5}>
-            <InputField name="username" label="username" />
-            <InputField name="password" label="password" isPassword />
-          </Flex>
-        </ModalBody>
-        <ModalFooter justifyContent="space-between">
-          <Box>
-            <Button size={['xs', 'sm']} type="submit" colorScheme="blue" mr={3}>
-              Sign in
-            </Button>
+    <>
+      <Box
+        as={motion.div}
+        whileHover={{ scale: 1.03 }}
+        w="100%"
+        textAlign="center"
+        key={card.name}
+      >
+        <Image src={card.imageUrl} onClick={onOpen} cursor="pointer" />
+      </Box>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>{card.name}</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>{JSON.stringify(card)}</ModalBody>
 
-            <Button size={['xs', 'sm']} colorScheme="blue" mr={3}>
-              Register
+          <ModalFooter>
+            <Button colorScheme="blue" mr={3} onClick={onClose}>
+              Close
             </Button>
-          </Box>
-          <Button size={['xs', 'sm']}>Cancel</Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
   );
-};
+}
 
 function CardsTable(data) {
   const { cards } = data;
-  const { isOpen, onOpen, onClose } = useDisclosure();
   console.log(cards);
   return (
     <SimpleGrid columns={[1, 2, 3]} justifyItems="center">
@@ -75,8 +68,7 @@ function CardsTable(data) {
         return (
           <Box key={card.id}>
             <Text>{JSON.stringify(card.name)}</Text>
-            <Image src={card.imageUrl} />
-            <Button onClick={onOpen}>Open Modal</Button>
+            <CardDetailModal card={card} />
           </Box>
         );
       })}
