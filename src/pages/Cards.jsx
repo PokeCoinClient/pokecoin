@@ -1,6 +1,10 @@
 import {
   Box,
   Button,
+  Card,
+  CardHeader,
+  CardBody,
+  CardFooter,
   Flex,
   Heading,
   Image,
@@ -17,6 +21,10 @@ import {
   SimpleGrid,
   Text,
   useDisclosure,
+  Stack,
+  StackDivider,
+  Grid,
+  GridItem,
 } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
 import { useCallback, useEffect, useState } from 'react';
@@ -46,7 +54,12 @@ function CardDetailModal({ card }) {
         <ModalContent>
           <ModalHeader>{card.name}</ModalHeader>
           <ModalCloseButton />
-          <ModalBody>{JSON.stringify(card)}</ModalBody>
+          <ModalBody>
+            <Box>
+              <Image src={card.imageUrlHiRes} />
+              <Text>{card.rarity}</Text>
+            </Box>
+          </ModalBody>
 
           <ModalFooter>
             <Button colorScheme="blue" mr={3} onClick={onClose}>
