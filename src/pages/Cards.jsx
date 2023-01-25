@@ -57,19 +57,18 @@ function CardDetailModal({ card }) {
           <ModalBody>
             <Flex>
               <Image src={card.imageUrlHiRes} width={330} />
-              <Text marginLeft={2}>
-                {`Attacks: ${card.attacks[0].cost}`}
-                <br />
-                {`Rarity: ${card.rarity}`}
-                <br />
-                {`HP: ${card.hp}`}
-                <br />
-                {`Level: ${card.level}`}
-                <br />
-                {`Weaknesses: ${card.weaknesses}`}
-                <br />
-                {`Rarity: ${card.rarity}`}
-              </Text>
+              <Box>
+                <Text marginLeft={2}>{`Type: ${card.types[0]}`}</Text>
+                <Text marginLeft={2}>{`Attacks: ${card.attacks[0].cost}`}</Text>
+                <Text marginLeft={2}>{`Rarity: ${card.rarity}`}</Text>
+                <Text marginLeft={2}>{`HP: ${card.hp}`}</Text>
+                <Text marginLeft={2}>{`Level: ${card.level}`}</Text>
+                <Text marginLeft={2}>{`Weaknesses: ${card.weaknesses?.map(
+                  (e) => {
+                    return e.type || e;
+                  }
+                )}`}</Text>
+              </Box>
             </Flex>
           </ModalBody>
 
