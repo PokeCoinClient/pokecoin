@@ -14,10 +14,7 @@ const styles = {
   }),
 };
 
-const fonts = {
-  heading: `Silkscreen`,
-  body: `Silkscreen`,
-};
+const fonts = {};
 
 const theme = extendTheme({ config, fonts, styles });
 export default theme;

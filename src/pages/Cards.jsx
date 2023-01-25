@@ -49,16 +49,28 @@ function CardDetailModal({ card }) {
       >
         <Image src={card.imageUrl} onClick={onOpen} cursor="pointer" />
       </Box>
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={onClose} size="xl">
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>{card.name}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Box>
-              <Image src={card.imageUrlHiRes} />
-              <Text>{card.rarity}</Text>
-            </Box>
+            <Flex>
+              <Image src={card.imageUrlHiRes} width={330} />
+              <Text marginLeft={2}>
+                {`Attacks: ${card.attacks[0].cost}`}
+                <br />
+                {`Rarity: ${card.rarity}`}
+                <br />
+                {`HP: ${card.hp}`}
+                <br />
+                {`Level: ${card.level}`}
+                <br />
+                {`Weaknesses: ${card.weaknesses}`}
+                <br />
+                {`Rarity: ${card.rarity}`}
+              </Text>
+            </Flex>
           </ModalBody>
 
           <ModalFooter>
