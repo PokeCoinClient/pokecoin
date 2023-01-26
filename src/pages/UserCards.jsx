@@ -16,6 +16,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import { useQuery, useQueries } from '@tanstack/react-query';
+import { motion } from 'framer-motion';
 import axios from '../api/axios';
 import { useAuth } from '../contexts/AuthContext.jsx';
 
@@ -28,36 +29,46 @@ const getUserCards = async (token) => {
   return resp.data;
 };
 
-const getCardById = (id) => {
-  return axios.get(`/cards/${id}`);
+const getCardById = async (id) => {
+  const resp = await axios.get(`/cards/${id}`);
+  return resp.data;
 };
 
-function CardsTable(data) {
-  const { cards } = data;
-  console.log(cards);
-  const result = useQueries(
-    cards?.map((card) => {
-      console.log(card.cardId);
+function CardsTable({ cards }) {
+  const result = useQueries({
+    queries: cards?.map((card) => {
       return {
         queryKey: ['card', card.cardId],
         queryFn: () => getCardById(card.cardId),
       };
-    })
+    }),
+  });
+  const cardSet = new Set();
+  // need fix, daten sind noch nicht da wieso auch immer
+  result.map((c) => cardSet.add(c?.data.card));
+  return (
+    <SimpleGrid columns={[1, 2, 3]} justifyItems="center">
+      {cardSet?.forEach((card) => {
+        return (
+          <Box key={card.id}>
+            <Text>{JSON.stringify(card.name)}</Text>
+          </Box>
+        );
+      })}
+    </SimpleGrid>
   );
-  console.log(result);
-  return <SimpleGrid columns={[1, 2, 3]} justifyItems="center" />;
 }
 
 function Shop() {
   const { user } = useAuth();
-  const { data: cards } = useQuery({
+  const { data: cardIds } = useQuery({
     queryKey: ['cards'],
-    queryFn: () => getUserCards(user.token),
+    queryFn: () => getUserCards(user?.token),
   });
   return (
     <Box>
       <Heading>Cards</Heading>
-      <CardsTable cards={cards} />
+      {cardIds && <CardsTable cards={cardIds} />}
     </Box>
   );
 }
