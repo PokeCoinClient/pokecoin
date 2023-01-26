@@ -12,6 +12,7 @@ const navLinks = [
   { name: 'Home', path: '/', needsAuth: false },
   { name: 'Shop', path: '/shop', needsAuth: false },
   { name: 'Cards', path: '/cards', needsAuth: false },
+  { name: 'UserCards', path: '/userCards', needsAuth: true },
   { name: 'Mine', path: '/mine', needsAuth: true },
   { name: 'User', path: '/profile', needsAuth: true },
 ];

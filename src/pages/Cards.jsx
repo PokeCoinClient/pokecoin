@@ -1,10 +1,6 @@
 import {
   Box,
   Button,
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
   Flex,
   Heading,
   Image,
@@ -21,10 +17,6 @@ import {
   SimpleGrid,
   Text,
   useDisclosure,
-  Stack,
-  StackDivider,
-  Grid,
-  GridItem,
 } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
 import { useCallback, useEffect, useState } from 'react';
@@ -101,7 +93,7 @@ function CardsTable(data) {
 }
 
 // TODO make use of useMemo for less rerendering
-function Shop() {
+function Cards() {
   const [page, setPage] = useState(0);
   const [search, setSearch] = useState('');
 
@@ -144,4 +136,4 @@ function Shop() {
   );
 }
 
-export default Shop;
+export default Cards;
