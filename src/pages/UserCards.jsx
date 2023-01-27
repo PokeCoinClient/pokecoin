@@ -12,13 +12,16 @@ import {
   ModalHeader,
   ModalOverlay,
   SimpleGrid,
+  Skeleton,
   Text,
   useDisclosure,
 } from '@chakra-ui/react';
 import { useQuery, useQueries } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
+import { useMemo } from 'react';
 import axios from '../api/axios';
 import { useAuth } from '../contexts/AuthContext.jsx';
+import { CardDetailModal } from './Cards.jsx';
 
 const getUserCards = async (token) => {
   const resp = await axios.get(`/cards/usercards`, {
@@ -35,23 +38,27 @@ const getCardById = async (id) => {
 };
 
 function CardsTable({ cards }) {
-  const result = useQueries({
+  const cardSet = useQueries({
     queries: cards?.map((card) => {
       return {
-        queryKey: ['card', card.cardId],
-        queryFn: () => getCardById(card.cardId),
+        queryKey: ['card', card],
+        queryFn: () => getCardById(card),
       };
     }),
   });
-  const cardSet = new Set();
-  // need fix, daten sind noch nicht da wieso auch immer
-  result.map((c) => cardSet.add(c?.data.card));
   return (
-    <SimpleGrid columns={[1, 2, 3]} justifyItems="center">
-      {cardSet?.forEach((card) => {
+    <SimpleGrid columns={[1, 2, 3]} justifyItems="center" gap={3}>
+      {cardSet?.map((card, idx) => {
         return (
-          <Box key={card.id}>
-            <Text>{JSON.stringify(card.name)}</Text>
+          <Box key={idx}>
+            {card.isLoading ? (
+              <Skeleton w="240px" h="330px" />
+            ) : (
+              <>
+                <Text>{JSON.stringify(card.data.card.name)}</Text>
+                <CardDetailModal card={card.data.card} />
+              </>
+            )}
           </Box>
         );
       })}
@@ -59,18 +66,26 @@ function CardsTable({ cards }) {
   );
 }
 
-function Shop() {
+// ToDo add amount to cards
+
+function UserCards() {
   const { user } = useAuth();
   const { data: cardIds } = useQuery({
     queryKey: ['cards'],
     queryFn: () => getUserCards(user?.token),
   });
+
+  const filteredCards = useMemo(() => {
+    const ids = cardIds?.map((o) => o.cardId);
+    return [...new Set(ids)];
+  }, [cardIds]);
+
   return (
     <Box>
       <Heading>Cards</Heading>
-      {cardIds && <CardsTable cards={cardIds} />}
+      {filteredCards && <CardsTable cards={filteredCards} />}
     </Box>
   );
 }
 
-export default Shop;
+export default UserCards;

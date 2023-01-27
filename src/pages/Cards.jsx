@@ -28,13 +28,13 @@ const getCards = async (data) => {
   return resp.data;
 };
 
-function CardDetailModal({ card }) {
+export function CardDetailModal({ card }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <>
       <Box
         as={motion.div}
-        whileHover={{ scale: 1.03 }}
+        whileHover={{ scale: 1.02 }}
         w="100%"
         textAlign="center"
         key={card.name}
@@ -50,16 +50,26 @@ function CardDetailModal({ card }) {
             <Flex>
               <Image src={card.imageUrlHiRes} width={330} />
               <Box>
-                <Text marginLeft={2}>{`Type: ${card.types[0]}`}</Text>
-                <Text marginLeft={2}>{`Attacks: ${card.attacks[0].cost}`}</Text>
+                <Text marginLeft={2}>{`Type: ${
+                  card.types?.map((e) => {
+                    return e;
+                  }) ||
+                  card.supertype ||
+                  '-'
+                }`}</Text>
+                <Text marginLeft={2}>{`Attacks: ${
+                  card.attacks?.map((e) => {
+                    return e.name;
+                  }) || '-'
+                }`}</Text>
                 <Text marginLeft={2}>{`Rarity: ${card.rarity}`}</Text>
-                <Text marginLeft={2}>{`HP: ${card.hp}`}</Text>
-                <Text marginLeft={2}>{`Level: ${card.level}`}</Text>
-                <Text marginLeft={2}>{`Weaknesses: ${card.weaknesses?.map(
-                  (e) => {
-                    return e.type || e;
-                  }
-                )}`}</Text>
+                <Text marginLeft={2}>{`HP: ${card.hp || '-'}`}</Text>
+                <Text marginLeft={2}>{`Level: ${card.level || '-'}`}</Text>
+                <Text marginLeft={2}>{`Weaknesses: ${
+                  card.weaknesses?.map((e) => {
+                    return e.type;
+                  }) || '-'
+                }`}</Text>
               </Box>
             </Flex>
           </ModalBody>
