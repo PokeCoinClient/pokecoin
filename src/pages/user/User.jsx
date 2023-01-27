@@ -1,21 +1,12 @@
 import { Box, Heading, Text } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '../../contexts/AuthContext';
-import axios from '../../api/axios';
 import { getUserBalance } from '../../components/Navbar.jsx';
-
-const axiosMe = async (token) => {
-  const resp = await axios.get('/auth/me', {
-    headers: {
-      token: `${token.queryKey[1]}`,
-    },
-  });
-  return resp.data;
-};
+import { getMe } from '../../service/AuthService.js';
 
 function User() {
   const { user } = useAuth();
-  const { data, isLoading, isError } = useQuery(['me', user.token], axiosMe, {
+  const { data, isLoading, isError } = useQuery(['me', user.token], getMe, {
     enabled: !!user,
   });
   const { data: currentBalance } = useQuery(

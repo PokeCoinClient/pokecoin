@@ -1,41 +1,9 @@
-import {
-  Box,
-  Button,
-  Flex,
-  Heading,
-  Image,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  SimpleGrid,
-  Skeleton,
-  Text,
-  useDisclosure,
-} from '@chakra-ui/react';
+import { Box, SimpleGrid, Skeleton, Text } from '@chakra-ui/react';
 import { useQuery, useQueries } from '@tanstack/react-query';
-import { motion } from 'framer-motion';
 import { useMemo } from 'react';
-import axios from '../api/axios';
 import { useAuth } from '../contexts/AuthContext.jsx';
 import { CardDetailModal } from './Cards.jsx';
-
-const getUserCards = async (token) => {
-  const resp = await axios.get(`/cards/usercards`, {
-    headers: {
-      token: `${token}`,
-    },
-  });
-  return resp.data;
-};
-
-const getCardById = async (id) => {
-  const resp = await axios.get(`/cards/${id}`);
-  return resp.data;
-};
+import { getCardById, getUserCards } from '../service/CardsService.js';
 
 function CardsTable({ cards }) {
   const cardSet = useQueries({

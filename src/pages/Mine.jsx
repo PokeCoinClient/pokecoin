@@ -25,11 +25,15 @@ import Pokemon3Img from '../assets/pokemon3.png';
 import Pokemon4Img from '../assets/pokemon4.png';
 import Pokemon5Img from '../assets/pokemon5.png';
 import PikachuImg from '../assets/pikachu-running.png';
-import axios from '../api/axios';
 import { useAuth } from '../contexts/AuthContext';
 import makeWorkerApiAndCleanup from '../workers/workerHooks';
 import usePageVisibility from '../hooks/usePageVisibility';
 import { TimeIcon } from '@chakra-ui/icons';
+import {
+  getCurrentDifficulty,
+  getLastBlock,
+  postBlock,
+} from '../service/BlockchainService.js';
 
 const POKEMON = Object.freeze({
   SCIZOR: {
@@ -63,25 +67,6 @@ const POKEMON = Object.freeze({
     gif: Pokemon5,
   },
 });
-
-const getLastBlock = async () => {
-  const resp = await axios.get('/blockchain/lastBlock');
-  return resp.data;
-};
-
-const getCurrentDifficulty = async () => {
-  const resp = await axios.get('/blockchain/currentDifficulty');
-  return resp.data;
-};
-
-const postBlock = async ({ data, token }) => {
-  const resp = await axios.post('/blockchain/blocks', data, {
-    headers: {
-      token: `${token}`,
-    },
-  });
-  return resp.data;
-};
 
 const usePostBlock = () => {
   const queryClient = useQueryClient();

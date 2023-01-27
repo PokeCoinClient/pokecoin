@@ -20,12 +20,7 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { useCallback, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import axios from '../api/axios';
-
-const getCards = async (data) => {
-  const resp = await axios.get(`/cards?page=${data}`);
-  return resp.data;
-};
+import { getCards } from '../service/CardsService.js';
 
 export function CardDetailModal({ card }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -86,7 +81,6 @@ export function CardDetailModal({ card }) {
 
 function CardsTable(data) {
   const { cards } = data;
-  console.log(cards);
   return (
     <SimpleGrid columns={[1, 2, 3]} justifyItems="center">
       {cards?.cards.map((card) => {

@@ -10,28 +10,13 @@ import {
 } from '@chakra-ui/react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
-import axios from '../api/axios';
 import card from '../assets/pokemon-card-backside.jpg';
 import { useAuth } from '../contexts/AuthContext';
-
-const getCardPackages = async () => {
-  const resp = await axios.get('/cards/packages');
-  return resp.data;
-};
-
-const getCurrentPackagePrice = async () => {
-  const resp = await axios.get(`/cards/packages/currentPackageCost`);
-  return resp.data;
-};
-
-const buyPackageByName = async (data, token) => {
-  const resp = await axios.get(`/cards/packages/${data}/buyDefaultPackage`, {
-    headers: {
-      token: `${token}`,
-    },
-  });
-  return resp.data;
-};
+import {
+  buyPackageByName,
+  getCardPackages,
+  getCurrentPackagePrice,
+} from '../service/CardsService.js';
 
 const useBuyPackageByName = () => {
   const { user } = useAuth();

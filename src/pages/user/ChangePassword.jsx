@@ -3,16 +3,7 @@ import { useForm } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
 import InputField from '../../components/InputField';
 import { useAuth } from '../../contexts/AuthContext';
-import axios from '../../api/axios.js';
-
-const changePassword = async (data, token) => {
-  const resp = await axios.post('/auth/changePassword', data, {
-    headers: {
-      token: `${token}`,
-    },
-  });
-  return resp.data;
-};
+import { changePassword } from '../../service/AuthService.js';
 
 function ChangePassword() {
   const {
