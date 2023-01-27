@@ -1,9 +1,10 @@
 import {
-  createReactRouter,
-  createRouteConfig,
   Link,
   Outlet,
-  useRouter,
+  ReactRouter,
+  RootRoute,
+  Route,
+  useNavigate,
 } from '@tanstack/react-router';
 import React from 'react';
 import {
@@ -27,20 +28,25 @@ import Mine from './pages/Mine';
 import ChangePassword from './pages/user/ChangePassword';
 import User from './pages/user/User';
 
-const rootRoute = createRouteConfig({
+const rootRoute = new RootRoute({
   component: () => {
     return (
-      <Container maxW="container.xl" mt={3}>
+      <Container
+        maxW="container.xl"
+        minH={'100vh'}
+        maxH={'100vh'}
+        display={'grid'}
+        gridTemplateRows={'auto 1fr'}
+      >
         <Navbar />
         <Box
-          minH={'89vh'}
           p={5}
-          mt={3}
-          style={{
-            background: '#f0efeb',
-            boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
-            borderRadius: '10px',
-          }}
+          mt={2}
+          mb={3}
+          boxShadow={'rgba(0, 0, 0, 0.35) 0px 5px 15px'}
+          borderRadius={'5px'}
+          borderWidth={'1px'}
+          overflow={'auto'}
         >
           <Outlet />
         </Box>
@@ -49,40 +55,45 @@ const rootRoute = createRouteConfig({
   },
 });
 
-const indexRoute = rootRoute.createRoute({
+const indexRoute = new RootRoute({
+  getParentRoute: () => rootRoute,
   path: '/',
   component: Home,
 });
 
-const shopRoute = rootRoute.createRoute({
+const shopRoute = new RootRoute({
+  getParentRoute: () => rootRoute,
   path: 'shop',
   component: Shop,
 });
 
-const cardsRoute = rootRoute.createRoute({
+const cardsRoute = new RootRoute({
+  getParentRoute: () => rootRoute,
   path: 'cards',
   component: Cards,
 });
 
-const mineRoute = rootRoute.createRoute({
+const mineRoute = new RootRoute({
+  getParentRoute: () => rootRoute,
   path: 'mine',
   component: Mine,
 });
 
-const userCardsRoute = rootRoute.createRoute({
+const userCardsRoute = new RootRoute({
+  getParentRoute: () => rootRoute,
   path: 'userCards',
   component: UserCards,
 });
 
 function AuthenticatedRoute() {
   const { isAuthenticated } = useAuth();
-  const router = useRouter();
+  const navigate = useNavigate();
   if (!isAuthenticated) {
     return (
       <Flex h="90%" justifyContent="center">
         <Center flexDirection="column" gap={2}>
           <Text>You are not authenticated. Please login to continue</Text>
-          <Button onClick={() => router.navigate({ to: indexRoute.id })}>
+          <Button onClick={() => navigate({ to: indexRoute.id })}>
             Return
           </Button>
         </Center>
@@ -92,12 +103,14 @@ function AuthenticatedRoute() {
   return <Outlet />;
 }
 
-const authenticatedRoute = rootRoute.createRoute({
+const authenticatedRoute = new Route({
+  getParentRoute: () => rootRoute,
   id: 'authenticated',
   component: AuthenticatedRoute,
 });
 
-const profileLayoutRoute = rootRoute.createRoute({
+const profileLayoutRoute = new Route({
+  getParentRoute: () => authenticatedRoute,
   path: 'profile',
   component: () => {
     const userPages = [
@@ -141,17 +154,19 @@ const profileLayoutRoute = rootRoute.createRoute({
   },
 });
 
-const userRoute = profileLayoutRoute.createRoute({
+const userRoute = new Route({
+  getParentRoute: () => profileLayoutRoute,
   path: '/',
   component: User,
 });
 
-const userPassword = profileLayoutRoute.createRoute({
+const userPassword = new Route({
+  getParentRoute: () => profileLayoutRoute,
   path: 'change-password',
   component: ChangePassword,
 });
 
-const routeConfig = rootRoute.addChildren([
+const routeTree = rootRoute.addChildren([
   indexRoute,
   shopRoute,
   cardsRoute,
@@ -162,9 +177,6 @@ const routeConfig = rootRoute.addChildren([
   ]),
 ]);
 
-const router = createReactRouter({
-  routeConfig,
-  defaultPreload: 'intent',
-});
+const router = new ReactRouter({ routeTree });
 
 export default router;

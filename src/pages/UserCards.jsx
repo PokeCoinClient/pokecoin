@@ -80,12 +80,7 @@ function UserCards() {
     return [...new Set(ids)];
   }, [cardIds]);
 
-  return (
-    <Box>
-      <Heading>Cards</Heading>
-      {filteredCards && <CardsTable cards={filteredCards} />}
-    </Box>
-  );
+  return <Box>{filteredCards && <CardsTable cards={filteredCards} />}</Box>;
 }
 
 export default UserCards;

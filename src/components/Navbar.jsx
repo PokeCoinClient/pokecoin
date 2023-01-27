@@ -7,7 +7,7 @@ import {
   Spacer,
   Text,
 } from '@chakra-ui/react';
-import { Link as NavLink, useRouter } from '@tanstack/react-router';
+import { Link as NavLink, useNavigate } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
 import IconSvg from '../assets/icon.svg';
 import Login from './Login';
@@ -17,12 +17,13 @@ import { CardsIcon } from './Icons.jsx';
 import { FiLogOut, FiHome, FiShoppingCart, FiUser } from 'react-icons/fi';
 import { GiCardPick } from 'react-icons/gi';
 import { Icon } from '@chakra-ui/icons';
+import ToggleButton from './ToggleButton.jsx';
 
 const navLinks = [
   { name: 'Home', path: '/', icon: FiHome, needsAuth: false },
   { name: 'Shop', path: '/shop', icon: FiShoppingCart, needsAuth: false },
   { name: 'Cards', path: '/cards', icon: CardsIcon, needsAuth: false },
-  { name: 'UserCards', path: '/userCards', needsAuth: true },
+  { name: 'MyCards', path: '/userCards', icon: CardsIcon, needsAuth: true },
   { name: 'Mine', path: '/mine', icon: GiCardPick, needsAuth: true },
   { name: 'User', path: '/profile', icon: FiUser, needsAuth: true },
 ];
@@ -38,7 +39,7 @@ export const getUserBalance = async (token) => {
 
 function Navbar() {
   const { user, isAuthenticated, logout } = useAuth();
-  const router = useRouter();
+  const navigate = useNavigate();
 
   const { data: userBalance } = useQuery({
     queryKey: ['balance', user?.token],
@@ -54,12 +55,10 @@ function Navbar() {
       h={'7vh'}
       pr={3}
       pl={3}
-      style={{
-        background: '#f0efeb',
-        boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
-        backdropFilter: ' blur(6.8px)',
-        borderRadius: '10px',
-      }}
+      mt={3}
+      boxShadow={'rgba(0, 0, 0, 0.35) 0px 5px 15px'}
+      borderRadius={'5px'}
+      borderWidth={'1px'}
     >
       <Flex display="flex" gap={1} alignItems="center">
         <Image src={IconSvg} height="40px" />
@@ -73,8 +72,7 @@ function Navbar() {
         </NavLink>
       </Flex>
       <Spacer />
-
-      <Flex h="75%" gap={[1, 2, 5]}>
+      <Flex h="60%" gap={[1, 2, 5]}>
         {navLinks.map((link) => {
           if (link.needsAuth && !isAuthenticated) {
             return null;
@@ -103,11 +101,18 @@ function Navbar() {
                 }}
               >
                 <Center h="100%" width="100%" p={3}>
-                  {<Icon as={link.icon} boxSize={{ base: 4, sm: 6, md: 6 }} />}
+                  {
+                    <Icon
+                      as={link.icon}
+                      boxSize={{ base: 4, sm: 6, md: 6 }}
+                      color={'black'}
+                    />
+                  }
                   <Text
                     display={['none', 'none', 'block']}
                     fontSize={['sm', 'sm', 'md']}
                     ml={1}
+                    color={'black'}
                   >
                     {link.name}
                   </Text>
@@ -118,7 +123,8 @@ function Navbar() {
         })}
       </Flex>
       <Spacer />
-      <Flex h="75%" justifyContent="flex-end" alignItems="center" gap={2}>
+      <Flex h="60%" justifyContent="flex-end" alignItems="center" gap={2}>
+        <ToggleButton />
         {isAuthenticated ? (
           <>
             <Flex
@@ -129,7 +135,12 @@ function Navbar() {
               width="100%"
               bg="#f8d077"
             >
-              <Text fontWeight={'bold'} fontSize={['sm', 'md']} p={1}>
+              <Text
+                fontWeight={'bold'}
+                fontSize={['sm', 'md']}
+                p={1}
+                color={'black'}
+              >
                 {userBalance?.amount}
               </Text>
             </Flex>
@@ -138,8 +149,9 @@ function Navbar() {
               h="100%"
               onClick={() => {
                 logout();
-                router.navigate({ to: '/' });
+                navigate({ to: '/' });
               }}
+              color={'black'}
               icon={<FiLogOut />}
               aria-label={'Logout'}
             />

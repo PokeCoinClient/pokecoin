@@ -2,7 +2,6 @@ import {
   Box,
   Button,
   Flex,
-  Heading,
   Image,
   Input,
   InputGroup,
@@ -121,7 +120,6 @@ function Cards() {
 
   return (
     <Box>
-      <Heading>Cards</Heading>
       <Flex>
         <InputGroup m="5px">
           <InputLeftAddon children="Name" />
