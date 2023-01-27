@@ -15,24 +15,54 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import SleepingPikachu from '../assets/pikachu-sleeping.gif';
 import RunningPikachu from '../assets/pikachu-running.gif';
 import Pokemon1 from '../assets/pokemon1.gif';
-import Pokemon2 from '../assets/pokemon2.webp';
+import Pokemon1Img from '../assets/pokemon1.png';
+import Pokemon2 from '../assets/pokemon2.gif';
 import Pokemon3 from '../assets/pokemon3.gif';
 import Pokemon4 from '../assets/pokemon4.gif';
-import Pokemon5 from '../assets/pokemon5.webp';
+import Pokemon5 from '../assets/pokemon5.gif';
+import Pokemon2Img from '../assets/pokemon2.png';
+import Pokemon3Img from '../assets/pokemon3.png';
+import Pokemon4Img from '../assets/pokemon4.png';
+import Pokemon5Img from '../assets/pokemon5.png';
+import PikachuImg from '../assets/pikachu-running.png';
 import axios from '../api/axios';
 import { useAuth } from '../contexts/AuthContext';
 import makeWorkerApiAndCleanup from '../workers/workerHooks';
 import usePageVisibility from '../hooks/usePageVisibility';
 import { TimeIcon } from '@chakra-ui/icons';
 
-const MiningGifs = [
-  Pokemon1,
-  RunningPikachu,
-  Pokemon2,
-  Pokemon3,
-  Pokemon4,
-  Pokemon5,
-];
+const POKEMON = Object.freeze({
+  SCIZOR: {
+    name: 'Scizor',
+    image: Pokemon1Img,
+    gif: Pokemon1,
+  },
+  PIKACHU: {
+    name: 'Pikachu',
+    image: PikachuImg,
+    gif: RunningPikachu,
+  },
+  HAUNTER: {
+    name: 'Haunter',
+    image: Pokemon2Img,
+    gif: Pokemon2,
+  },
+  DRAGONITE: {
+    name: 'Dragonite',
+    image: Pokemon3Img,
+    gif: Pokemon3,
+  },
+  CYNDAQUIL: {
+    name: 'Cyndaquil',
+    image: Pokemon4Img,
+    gif: Pokemon4,
+  },
+  SHINX: {
+    name: 'Shinx',
+    image: Pokemon5Img,
+    gif: Pokemon5,
+  },
+});
 
 const getLastBlock = async () => {
   const resp = await axios.get('/blockchain/lastBlock');
@@ -99,7 +129,7 @@ const useGetCurrentDifficulty = () => {
 
 function Mine() {
   const [isRunning, setIsRunning] = useState(false);
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedPokemon, setSelectedPokemon] = useState(null);
   const { user } = useAuth();
   const pageVisibilityStatus = usePageVisibility();
 
@@ -150,24 +180,23 @@ function Mine() {
         }}
         gap={1}
         justifyContent={'space-between'}
-        border={'1px solid #554739'}
       >
-        {MiningGifs.map((x, idx) => {
+        {Object.keys(POKEMON).map((x) => {
           return (
             <Box
-              key={idx}
+              key={POKEMON[x].name}
               bg={'#ecbe4a'}
               borderRadius={'5px'}
               cursor="pointer"
-              border={selectedImage === x ? '1px solid #554739' : ''}
+              border={selectedPokemon === x ? '3px solid #554739' : ''}
             >
               <Image
-                src={x}
+                src={POKEMON[x].image}
                 width={'125px'}
                 userSelect={'none'}
                 objectFit={'cover'}
                 overflow="hidden"
-                onClick={() => setSelectedImage(x)}
+                onClick={() => setSelectedPokemon(x)}
               />
             </Box>
           );
@@ -178,13 +207,13 @@ function Mine() {
           <Box pl={5} width={'100%'} justifyContent={'space-evenly'}>
             <Text fontSize="xl">Last Block:</Text>
             <Box display="flex" alignItems="center" gap={1}>
-              <Tooltip label={'lol'}>
+              <Tooltip label={'Last Hash'}>
                 <TimeIcon />
               </Tooltip>
               <Text fontSize="xl">{lastBlock.hash.substring(0, 10)}...</Text>
             </Box>
             <Box display="flex" alignItems="center" gap={1}>
-              <Tooltip label={'lol'}>
+              <Tooltip label={'Last Block mined at'}>
                 <TimeIcon />
               </Tooltip>
               <Text fontSize="xl">
@@ -198,14 +227,25 @@ function Mine() {
           borderBottom={'3px solid #554739'}
           width={'100%'}
           height={'100%'}
-          justifyContent={'center'}
+          justifyContent={'space-evenly'}
           flexDirection="column"
           gap={2}
           alignItems="center"
         >
+          <Text fontSize="xl">
+            {selectedPokemon
+              ? `Selected Pokemon: ${POKEMON[selectedPokemon].name}`
+              : 'Select a pokemon!'}
+          </Text>
           <Box position="relative">
             <Image
-              src={isRunning ? selectedImage : SleepingPikachu}
+              src={
+                isRunning
+                  ? POKEMON[selectedPokemon].gif
+                  : selectedPokemon
+                  ? POKEMON[selectedPokemon].image
+                  : SleepingPikachu
+              }
               height="200px"
             />
           </Box>
@@ -213,7 +253,7 @@ function Mine() {
 
         <Button
           size={['sm', 'md', 'lg']}
-          disabled={!selectedImage}
+          disabled={!selectedPokemon}
           onClick={() => setIsRunning(!isRunning)}
           colorScheme={useColorModeValue('blue', 'yellow')}
         >
