@@ -4,8 +4,6 @@ module.exports = {
     "es2021": true
   },
   "extends": [
-    "airbnb",
-    "airbnb/hooks",
     "plugin:react/recommended",
     "plugin:prettier/recommended",
   ],
@@ -20,5 +18,6 @@ module.exports = {
   ],
   "rules": {
     "react/react-in-jsx-scope": "off",
+    "react/prop-types": "off",
   }
 }

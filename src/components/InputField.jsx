@@ -9,7 +9,14 @@ import {
 } from '@chakra-ui/react';
 import { useState } from 'react';
 
-function InputField({ register, errors, name, label, isPassword = false }) {
+function InputField({
+  register,
+  errors,
+  name,
+  label,
+  isPassword = false,
+  showButton = false,
+}) {
   const [show, setShow] = useState(false);
   const handleClick = () => setShow(!show);
 
@@ -18,10 +25,10 @@ function InputField({ register, errors, name, label, isPassword = false }) {
       <FormLabel htmlFor={name}>{label}</FormLabel>
       <InputGroup size="md">
         <Input
-          {...register(name, { required: true })}
+          {...register(name, { required: 'This field is required.' })}
           type={isPassword ? (show ? 'text' : 'password') : 'text'}
         />
-        {isPassword && (
+        {isPassword && showButton && (
           <InputRightElement width="4.5rem">
             <Button h="1.75rem" size="sm" onClick={handleClick}>
               {show ? 'Hide' : 'Show'}

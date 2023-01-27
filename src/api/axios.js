@@ -1,6 +1,5 @@
 import axios from 'axios';
 
 export default axios.create({
-  // baseURL: 'http://localhost:3000',
-  baseURL: 'https://webeng.mi.hs-rm.de',
+  baseURL: import.meta.env.VITE_BACKEND_API_URL || 'http://localhost:3000',
 });
