@@ -33,7 +33,7 @@ const buyPackageByName = async (data, token) => {
   return resp.data;
 };
 
-const usePostBlock = () => {
+const useBuyPackageByName = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const toast = useToast();
@@ -73,7 +73,7 @@ const useGetPackagePrice = () => {
 function Shop() {
   const { data: cardPackages } = useGetPackages();
   const { data: cardPrice } = useGetPackagePrice();
-  const { mutate: buyPackage } = usePostBlock();
+  const { mutate: buyPackage } = useBuyPackageByName();
 
   return (
     <Box>

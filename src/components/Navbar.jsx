@@ -22,6 +22,7 @@ const navLinks = [
   { name: 'Home', path: '/', icon: FiHome, needsAuth: false },
   { name: 'Shop', path: '/shop', icon: FiShoppingCart, needsAuth: false },
   { name: 'Cards', path: '/cards', icon: CardsIcon, needsAuth: false },
+  { name: 'UserCards', path: '/userCards', needsAuth: true },
   { name: 'Mine', path: '/mine', icon: GiCardPick, needsAuth: true },
   { name: 'User', path: '/profile', icon: FiUser, needsAuth: true },
 ];

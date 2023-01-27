@@ -21,6 +21,7 @@ import Home from './pages/Home';
 import Navbar from './components/Navbar';
 import Shop from './pages/Shop';
 import Cards from './pages/Cards';
+import UserCards from './pages/UserCards.jsx';
 import { useAuth } from './contexts/AuthContext';
 import Mine from './pages/Mine';
 import ChangePassword from './pages/user/ChangePassword';
@@ -66,6 +67,11 @@ const cardsRoute = rootRoute.createRoute({
 const mineRoute = rootRoute.createRoute({
   path: 'mine',
   component: Mine,
+});
+
+const userCardsRoute = rootRoute.createRoute({
+  path: 'userCards',
+  component: UserCards,
 });
 
 function AuthenticatedRoute() {
@@ -151,6 +157,7 @@ const routeConfig = rootRoute.addChildren([
   cardsRoute,
   authenticatedRoute.addChildren([
     mineRoute,
+    userCardsRoute,
     profileLayoutRoute.addChildren([userRoute, userPassword]),
   ]),
 ]);
