@@ -25,6 +25,8 @@ function InputField({
       <FormLabel htmlFor={name}>{label}</FormLabel>
       <InputGroup size="md">
         <Input
+          border={'1px solid '}
+          borderColor={'#554739'}
           {...register(name, { required: 'This field is required.' })}
           type={isPassword ? (show ? 'text' : 'password') : 'text'}
         />

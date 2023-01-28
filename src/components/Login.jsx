@@ -135,13 +135,13 @@ function Login() {
                   register={register}
                   errors={errors}
                   name="username"
-                  label="username"
+                  label="Username"
                 />
                 <InputField
                   register={register}
                   errors={errors}
                   name="password"
-                  label="password"
+                  label="Password"
                   isPassword
                 />
               </Flex>

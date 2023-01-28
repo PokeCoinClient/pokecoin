@@ -3,6 +3,7 @@ import {
   Button,
   Flex,
   Image,
+  Skeleton,
   Spacer,
   Text,
   Tooltip,
@@ -179,6 +180,7 @@ function Mine() {
             >
               <Image
                 src={POKEMON[x].image}
+                fallback={<Skeleton height={'125px'} width={'125px'} />}
                 width={'125px'}
                 userSelect={'none'}
                 objectFit={'cover'}
