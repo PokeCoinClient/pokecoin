@@ -28,7 +28,7 @@ import PikachuImg from '../assets/pikachu-running.png';
 import { useAuth } from '../contexts/AuthContext';
 import makeWorkerApiAndCleanup from '../workers/workerHooks';
 import usePageVisibility from '../hooks/usePageVisibility';
-import { TimeIcon } from '@chakra-ui/icons';
+import { InfoIcon, QuestionIcon, TimeIcon } from '@chakra-ui/icons';
 import {
   getCurrentDifficulty,
   getLastBlock,
@@ -173,7 +173,9 @@ function Mine() {
               bg={'#ecbe4a'}
               borderRadius={'5px'}
               cursor="pointer"
-              border={selectedPokemon === x ? '3px solid #554739' : ''}
+              border={
+                selectedPokemon === x ? '3px solid #554739' : '3px solid #fff'
+              }
             >
               <Image
                 src={POKEMON[x].image}
@@ -187,23 +189,34 @@ function Mine() {
           );
         })}
       </Flex>
-      <VStack flex={1} border={'1px solid #554739'} borderRadius={'10px'}>
+      <VStack
+        flex={1}
+        border={'3px solid #554739'}
+        borderRadius={'10px'}
+        ml={1}
+      >
         {lastBlock && (
           <Box pl={5} width={'100%'} justifyContent={'space-evenly'}>
-            <Text fontSize="xl">Last Block:</Text>
+            <Text fontSize="lg">Last Block:</Text>
             <Box display="flex" alignItems="center" gap={1}>
               <Tooltip label={'Last Hash'}>
-                <TimeIcon />
+                <InfoIcon />
               </Tooltip>
-              <Text fontSize="xl">{lastBlock.hash.substring(0, 10)}...</Text>
+              <Text fontSize="md">{lastBlock.hash}</Text>
             </Box>
             <Box display="flex" alignItems="center" gap={1}>
-              <Tooltip label={'Last Block mined at'}>
+              <Tooltip label={'Mined at'}>
                 <TimeIcon />
               </Tooltip>
-              <Text fontSize="xl">
+              <Text fontSize="md">
                 {new Date(lastBlock.timestamp).toLocaleString()}
               </Text>
+            </Box>
+            <Box display="flex" alignItems="center" gap={1}>
+              <Tooltip label={'Mined by'}>
+                <QuestionIcon />
+              </Tooltip>
+              <Text fontSize="md">{lastBlock.foundByUser.username}</Text>
             </Box>
           </Box>
         )}
