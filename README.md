@@ -32,5 +32,5 @@ npm run dev
 ```
 ### Optionally, you can use the docker-compose file to run the app in development mode
 ```bash
-docker compose -f docker-compose.local.yml up --build
+docker compose -f docker-compose.local.yml up -d --build
 ```
