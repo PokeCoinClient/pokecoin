@@ -1,11 +1,20 @@
 import {
   Box,
+  Button,
   Flex,
   Heading,
   Image,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   SimpleGrid,
   Spacer,
   Text,
+  useDisclosure,
   useToast,
 } from '@chakra-ui/react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -65,10 +74,64 @@ const useGetPackagePrice = () => {
   });
 };
 
+function SelectedPackage({ currentCard, cardPrice }) {
+  const { isAuthenticated } = useAuth();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { mutate: buyPackage } = useBuyPackageByName();
+  return (
+    <Box
+      width="216.44px"
+      key={currentCard}
+      as={motion.div}
+      whileHover={{ scale: 1.05 }}
+      cursor="pointer"
+    >
+      <Image src={card} height="300px" onClick={onOpen} />
+      <Flex>
+        <Text textAlign="center">{currentCard}</Text>
+        <Spacer />
+        <Text>Price: {cardPrice}</Text>
+      </Flex>
+
+      <Modal isOpen={isOpen} onClose={onClose} size="xl">
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>{card.name}</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Flex>
+              <Image src={card} width={330} />
+              <Box>
+                <Text marginLeft={3}>Package name: {currentCard}</Text>
+                <Text marginLeft={3}>Price: {cardPrice}</Text>
+              </Box>
+            </Flex>
+          </ModalBody>
+
+          <ModalFooter>
+            {isAuthenticated && (
+              <Button
+                colorScheme="blue"
+                mr={3}
+                onClick={() => buyPackage(currentCard)}
+              >
+                Buy
+              </Button>
+            )}
+
+            <Button colorScheme="blue" mr={3} onClick={onClose}>
+              Close
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </Box>
+  );
+}
+
 function Shop() {
   const { data: cardPackages } = useGetPackages();
   const { data: cardPrice } = useGetPackagePrice();
-  const { mutate: buyPackage } = useBuyPackageByName();
 
   return (
     <Box>
@@ -84,24 +147,11 @@ function Shop() {
         </Box>
         {cardPackages?.map((currentCard) => {
           return (
-            <Box
-              width="216.44px"
+            <SelectedPackage
               key={currentCard}
-              as={motion.div}
-              whileHover={{ scale: 1.05 }}
-              cursor="pointer"
-            >
-              <Image
-                src={card}
-                height="300px"
-                onClick={() => buyPackage(currentCard)}
-              />
-              <Flex>
-                <Text textAlign="center">{currentCard}</Text>
-                <Spacer />
-                <Text>Price: {cardPrice}</Text>
-              </Flex>
-            </Box>
+              currentCard={currentCard}
+              cardPrice={cardPrice}
+            />
           );
         })}
         <Box width="216.44px" cursor="pointer">
