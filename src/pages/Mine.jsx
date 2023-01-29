@@ -87,6 +87,7 @@ const usePostBlock = () => {
       });
     },
     onError: (error) => {
+      queryClient.invalidateQueries(['lastBlock']);
       toast({
         title: 'Error.',
         description: error?.response?.data?.message,
