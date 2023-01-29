@@ -2,6 +2,7 @@ version: '3.7'
 
 services:
   pokecoin:
+    image: skyprime17/pokecoin:latest
     container_name: pokecoin-frontend
     build:
       context: .
