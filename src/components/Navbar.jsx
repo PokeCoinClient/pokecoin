@@ -19,7 +19,7 @@ import { GiCardPick } from 'react-icons/gi';
 import { Icon } from '@chakra-ui/icons';
 import ToggleButton from './ToggleButton.jsx';
 
-const navLinks = [
+const NAV_LINKS = [
   { name: 'Home', path: '/', icon: FiHome, needsAuth: false },
   { name: 'Shop', path: '/shop', icon: FiShoppingCart, needsAuth: false },
   { name: 'Cards', path: '/cards', icon: CardsIcon, needsAuth: false },
@@ -73,7 +73,7 @@ function Navbar() {
       </Flex>
       <Spacer />
       <Flex h="60%" gap={[1, 2, 5]}>
-        {navLinks.map((link) => {
+        {NAV_LINKS.map((link) => {
           if (link.needsAuth && !isAuthenticated) {
             return null;
           }

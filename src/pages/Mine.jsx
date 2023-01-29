@@ -17,10 +17,10 @@ import SleepingPikachu from '../assets/pikachu-sleeping.gif';
 import RunningPikachu from '../assets/pikachu-running.gif';
 import Pokemon1 from '../assets/pokemon1.gif';
 import Pokemon1Img from '../assets/pokemon1.png';
-import Pokemon2 from '../assets/pokemon2.gif';
+import Pokemon2 from '../assets/pokemon2.webp';
 import Pokemon3 from '../assets/pokemon3.gif';
 import Pokemon4 from '../assets/pokemon4.gif';
-import Pokemon5 from '../assets/pokemon5.gif';
+import Pokemon5 from '../assets/pokemon5.webp';
 import Pokemon2Img from '../assets/pokemon2.png';
 import Pokemon3Img from '../assets/pokemon3.png';
 import Pokemon4Img from '../assets/pokemon4.png';
@@ -87,6 +87,7 @@ const usePostBlock = () => {
       });
     },
     onError: (error) => {
+      queryClient.invalidateQueries(['lastBlock']);
       toast({
         title: 'Error.',
         description: error?.response?.data?.message,
