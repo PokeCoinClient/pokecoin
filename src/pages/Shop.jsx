@@ -109,7 +109,7 @@ function SelectedPackage({ currentCard, cardPrice }) {
           </ModalBody>
 
           <ModalFooter>
-            {isAuthenticated ? (
+            {isAuthenticated && (
               <Button
                 colorScheme="blue"
                 mr={3}
@@ -117,7 +117,7 @@ function SelectedPackage({ currentCard, cardPrice }) {
               >
                 Buy
               </Button>
-            ) : null}
+            )}
 
             <Button colorScheme="blue" mr={3} onClick={onClose}>
               Close
