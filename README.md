@@ -19,6 +19,8 @@
 Install [Node.js 18.12.0](https://nodejs.org/en/download/) or use the [nvm-windows](https://github.com/coreybutler/nvm-windows) manager to manage multiple Node.js versions.
 ### Clone the repository
 
+Copy .env.dist to .env and update the values as needed.
+
 ```bash
 git clone  https://github.com/PokeCoinClient/pokecoin.git
 ```
