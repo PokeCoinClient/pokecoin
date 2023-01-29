@@ -3,9 +3,6 @@ import {
   Button,
   Flex,
   Image,
-  Input,
-  InputGroup,
-  InputLeftAddon,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -18,7 +15,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
-import { useCallback, useEffect, useState } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { getCards } from '../service/CardsService.js';
 
@@ -98,28 +95,14 @@ function CardsTable(data) {
 // TODO make use of useMemo for less rerendering
 function Cards() {
   const [page, setPage] = useState(0);
-  const [search, setSearch] = useState('');
-
-  const onSetSearch = useCallback((evt) => setSearch(evt.target.value), []);
 
   const { data: cards } = useQuery({
     queryKey: ['cards', page],
     queryFn: () => getCards(page),
   });
 
-  // TODO implement search
-  useEffect(() => {
-    cards?.cards.filter((c) => c.name.includes(search));
-  }, [cards, search]);
-
   return (
     <Box>
-      <Flex>
-        <InputGroup m="5px">
-          <InputLeftAddon children="Name" />
-          <Input placeholder="Pikachu" value={search} onChange={onSetSearch} />
-        </InputGroup>
-      </Flex>
       <Button
         m="5px"
         onClick={() => (page > 0 ? setPage(page - 1) : setPage(page))}

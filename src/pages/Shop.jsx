@@ -75,6 +75,7 @@ const useGetPackagePrice = () => {
 };
 
 function SelectedPackage({ currentCard, cardPrice }) {
+  const { isAuthenticated } = useAuth();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { mutate: buyPackage } = useBuyPackageByName();
   return (
@@ -108,13 +109,16 @@ function SelectedPackage({ currentCard, cardPrice }) {
           </ModalBody>
 
           <ModalFooter>
-            <Button
-              colorScheme="blue"
-              mr={3}
-              onClick={() => buyPackage(currentCard)}
-            >
-              Buy
-            </Button>
+            {isAuthenticated ? (
+              <Button
+                colorScheme="blue"
+                mr={3}
+                onClick={() => buyPackage(currentCard)}
+              >
+                Buy
+              </Button>
+            ) : null}
+
             <Button colorScheme="blue" mr={3} onClick={onClose}>
               Close
             </Button>
