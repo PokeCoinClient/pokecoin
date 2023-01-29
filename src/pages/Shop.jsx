@@ -26,7 +26,6 @@ import {
   getCardPackages,
   getCurrentPackagePrice,
 } from '../service/CardsService.js';
-import { CardDetailModal } from './Cards.jsx';
 
 const useBuyPackageByName = () => {
   const { user } = useAuth();
@@ -77,6 +76,7 @@ const useGetPackagePrice = () => {
 
 function SelectedPackage({ currentCard, cardPrice }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { mutate: buyPackage } = useBuyPackageByName();
   return (
     <Box
       width="216.44px"
@@ -111,7 +111,7 @@ function SelectedPackage({ currentCard, cardPrice }) {
             <Button
               colorScheme="blue"
               mr={3}
-              onClick={() => buyPackageByName(currentCard)}
+              onClick={() => buyPackage(currentCard)}
             >
               Buy
             </Button>
@@ -128,7 +128,6 @@ function SelectedPackage({ currentCard, cardPrice }) {
 function Shop() {
   const { data: cardPackages } = useGetPackages();
   const { data: cardPrice } = useGetPackagePrice();
-  const { mutate: buyPackage } = useBuyPackageByName();
 
   return (
     <Box>
@@ -144,7 +143,11 @@ function Shop() {
         </Box>
         {cardPackages?.map((currentCard) => {
           return (
-            <SelectedPackage currentCard={currentCard} cardPrice={cardPrice} />
+            <SelectedPackage
+              key={currentCard}
+              currentCard={currentCard}
+              cardPrice={cardPrice}
+            />
           );
         })}
         <Box width="216.44px" cursor="pointer">
