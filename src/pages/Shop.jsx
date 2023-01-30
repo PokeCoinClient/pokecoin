@@ -26,6 +26,7 @@ import {
   getCardPackages,
   getCurrentPackagePrice,
 } from '../service/CardsService.js';
+import { CardDetailModal } from './Cards.jsx';
 
 const useBuyPackageByName = () => {
   const { user } = useAuth();
@@ -77,7 +78,8 @@ const useGetPackagePrice = () => {
 function SelectedPackage({ currentCard, cardPrice }) {
   const { isAuthenticated } = useAuth();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { mutate: buyPackage } = useBuyPackageByName();
+  const { mutate: buyPackage, data } = useBuyPackageByName();
+  console.log(data);
   return (
     <Box
       width="216.44px"
@@ -96,16 +98,27 @@ function SelectedPackage({ currentCard, cardPrice }) {
       <Modal isOpen={isOpen} onClose={onClose} size="xl">
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>{card.name}</ModalHeader>
+          <ModalHeader>{currentCard}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Flex>
-              <Image src={card} width={330} />
-              <Box>
-                <Text marginLeft={3}>Package name: {currentCard}</Text>
-                <Text marginLeft={3}>Price: {cardPrice}</Text>
-              </Box>
-            </Flex>
+            {!data ? (
+              <Flex>
+                <Image src={card} width={330} />
+                <Box>
+                  <Text marginLeft={3}>Package name: {currentCard}</Text>
+                  <Text marginLeft={3}>Price: {cardPrice}</Text>
+                </Box>
+              </Flex>
+            ) : (
+              data.cards.map((card) => {
+                return (
+                  <Box key={card.id}>
+                    <Text>{JSON.stringify(card.name)}</Text>
+                    <Image src={card.imageUrlHiRes} width={330} />
+                  </Box>
+                );
+              })
+            )}
           </ModalBody>
 
           <ModalFooter>

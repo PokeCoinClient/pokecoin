@@ -11,6 +11,7 @@ import {
   ModalHeader,
   ModalOverlay,
   SimpleGrid,
+  Skeleton,
   Text,
   useDisclosure,
 } from '@chakra-ui/react';
@@ -19,7 +20,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { getCards } from '../service/CardsService.js';
 
-export function CardDetailModal({ card }) {
+export function CardDetailModal({ card, c }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <>
@@ -41,21 +42,33 @@ export function CardDetailModal({ card }) {
             <Flex>
               <Image src={card.imageUrlHiRes} width={330} />
               <Box>
-                <Text marginLeft={2}>{`Type: ${
-                  card.types?.map((e) => {
-                    return e;
-                  }) ||
-                  card.supertype ||
-                  '-'
-                }`}</Text>
+                <Text marginLeft={2}>{`Artist: ${card.artist}`}</Text>
                 <Text marginLeft={2}>{`Attacks: ${
                   card.attacks?.map((e) => {
                     return e.name;
                   }) || '-'
                 }`}</Text>
-                <Text marginLeft={2}>{`Rarity: ${card.rarity}`}</Text>
                 <Text marginLeft={2}>{`HP: ${card.hp || '-'}`}</Text>
+                <Text marginLeft={2}>{`ID: ${card.id}`}</Text>
                 <Text marginLeft={2}>{`Level: ${card.level || '-'}`}</Text>
+                <Text marginLeft={2}>{`Pokedex Number: ${
+                  card.nationalPokedexNumber || '-'
+                }`}</Text>
+                <Text marginLeft={2}>{`Number: ${card.number || '-'}`}</Text>
+                <Text marginLeft={2}>{`Rarity: ${card.rarity}`}</Text>
+                <Text marginLeft={2}>{`Retreat Cost: ${
+                  card.retreatCost || '-'
+                }`}</Text>
+                <Text marginLeft={2}>{`Series: ${card.series || '-'}`}</Text>
+                <Text marginLeft={2}>{`Subtype: ${card.subtype || '-'}`}</Text>
+                <Text marginLeft={2}>{`Supertype: ${
+                  card.supertype || '-'
+                }`}</Text>
+                <Text marginLeft={2}>{`Types: ${
+                  card.types?.map((e) => {
+                    return e;
+                  }) || '-'
+                }`}</Text>
                 <Text marginLeft={2}>{`Weaknesses: ${
                   card.weaknesses?.map((e) => {
                     return e.type;
@@ -79,11 +92,10 @@ export function CardDetailModal({ card }) {
 function CardsTable(data) {
   const { cards } = data;
   return (
-    <SimpleGrid columns={[1, 2, 3]} justifyItems="center">
+    <SimpleGrid columns={[1, 2, 3, 4]} justifyItems="center" gap={3}>
       {cards?.cards.map((card) => {
         return (
           <Box key={card.id}>
-            <Text>{JSON.stringify(card.name)}</Text>
             <CardDetailModal card={card} />
           </Box>
         );
@@ -92,7 +104,6 @@ function CardsTable(data) {
   );
 }
 
-// TODO make use of useMemo for less rerendering
 function Cards() {
   const [page, setPage] = useState(0);
 
@@ -100,23 +111,21 @@ function Cards() {
     queryKey: ['cards', page],
     queryFn: () => getCards(page),
   });
-
   return (
     <Box>
-      <Button
-        m="5px"
-        onClick={() => (page > 0 ? setPage(page - 1) : setPage(page))}
-      >
+      <Button m="5px" onClick={() => setPage(page - 1)}>
         Previous
       </Button>
-      <Button
-        m="5px"
-        onClick={() => (page < 2 ? setPage(page + 1) : setPage(page))}
-      >
+      <Button m="5px" onClick={() => setPage(page + 1)}>
         Next
       </Button>
-
-      <CardsTable cards={cards} />
+      {cards?.cards?.length !== 0 ? (
+        <CardsTable cards={cards} />
+      ) : page < 0 ? (
+        setPage(0)
+      ) : (
+        setPage(page - 1)
+      )}
     </Box>
   );
 }
