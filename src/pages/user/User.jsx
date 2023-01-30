@@ -33,7 +33,7 @@ function User() {
       <Heading>Profile</Heading>
       <Text>User Id: {data._id}</Text>
       <Text>Username: {data.username}</Text>
-      <Text>Current balance: {currentBalance.amount} Pokecoins</Text>
+      <Text>Current balance: {currentBalance?.amount} Pokecoins</Text>
     </Box>
   );
 }
