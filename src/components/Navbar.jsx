@@ -12,12 +12,12 @@ import { useQuery } from '@tanstack/react-query';
 import IconSvg from '../assets/icon.svg';
 import Login from './Login';
 import { useAuth } from '../contexts/AuthContext';
-import axios from '../api/axios';
 import { CardsIcon } from './Icons.jsx';
 import { FiLogOut, FiHome, FiShoppingCart, FiUser } from 'react-icons/fi';
 import { GiCardPick } from 'react-icons/gi';
 import { Icon } from '@chakra-ui/icons';
 import ToggleButton from './ToggleButton.jsx';
+import { getUserBalance } from '../service/AuthService.js';
 
 const NAV_LINKS = [
   { name: 'Home', path: '/', icon: FiHome, needsAuth: false },
@@ -28,22 +28,13 @@ const NAV_LINKS = [
   { name: 'User', path: '/profile', icon: FiUser, needsAuth: true },
 ];
 
-export const getUserBalance = async (token) => {
-  const resp = await axios.get('/wallet/balance', {
-    headers: {
-      token: `${token.queryKey[1]}`,
-    },
-  });
-  return resp.data;
-};
-
 function Navbar() {
   const { user, isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
 
   const { data: userBalance } = useQuery({
-    queryKey: ['balance', user?.token],
-    queryFn: getUserBalance,
+    queryKey: ['balance'],
+    queryFn: () => getUserBalance(user.token),
     enabled: !!user?.token,
   });
 

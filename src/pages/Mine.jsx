@@ -71,12 +71,11 @@ const POKEMON = Object.freeze({
 
 const usePostBlock = () => {
   const queryClient = useQueryClient();
-  const { user } = useAuth();
   const toast = useToast();
   return useMutation(['postBlockHash'], postBlock, {
     onSuccess: () => {
       queryClient.invalidateQueries(['lastBlock']);
-      queryClient.invalidateQueries(['balance', user?.token]);
+      queryClient.invalidateQueries(['balance']);
       toast({
         title: 'Block mined.',
         description: 'You mined a block.',

@@ -1,19 +1,22 @@
 import { Box, Heading, Text } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '../../contexts/AuthContext';
-import { getUserBalance } from '../../components/Navbar.jsx';
-import { getMe } from '../../service/AuthService.js';
+import { getMe, getUserBalance } from '../../service/AuthService.js';
 
 function User() {
   const { user } = useAuth();
-  const { data, isLoading, isError } = useQuery(['me', user.token], getMe, {
-    enabled: !!user,
-  });
-  const { data: currentBalance } = useQuery(
-    ['currentBalance', user.token],
-    getUserBalance,
+  const { data, isLoading, isError } = useQuery(
+    ['me'],
+    () => getMe(user.token),
     {
-      enabled: !!user,
+      enabled: !!user?.token,
+    }
+  );
+  const { data: currentBalance } = useQuery(
+    ['currentBalance'],
+    () => getUserBalance(user.token),
+    {
+      enabled: !!user.token,
     }
   );
 
