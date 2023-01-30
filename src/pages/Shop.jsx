@@ -26,6 +26,7 @@ import {
   getCardPackages,
   getCurrentPackagePrice,
 } from '../service/CardsService.js';
+import { CardDetailModal } from './Cards.jsx';
 
 const useBuyPackageByName = () => {
   const { user } = useAuth();
@@ -97,7 +98,7 @@ function SelectedPackage({ currentCard, cardPrice }) {
       <Modal isOpen={isOpen} onClose={onClose} size="xl">
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>{card.name}</ModalHeader>
+          <ModalHeader>{currentCard}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             {!data ? (
@@ -109,7 +110,14 @@ function SelectedPackage({ currentCard, cardPrice }) {
                 </Box>
               </Flex>
             ) : (
-              <Text>test</Text>
+              data.cards.map((card) => {
+                return (
+                  <Box key={card.id}>
+                    <Text>{JSON.stringify(card.name)}</Text>
+                    <Image src={card.imageUrlHiRes} width={330} />
+                  </Box>
+                );
+              })
             )}
           </ModalBody>
 

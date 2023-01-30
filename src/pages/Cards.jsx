@@ -18,7 +18,6 @@ import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { getCards } from '../service/CardsService.js';
-import { set } from 'react-hook-form';
 
 export function CardDetailModal({ card }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -52,16 +51,15 @@ export function CardDetailModal({ card }) {
                 <Text marginLeft={2}>{`HP: ${card.hp || '-'}`}</Text>
                 <Text marginLeft={2}>{`ID: ${card.id}`}</Text>
                 <Text marginLeft={2}>{`Level: ${card.level || '-'}`}</Text>
-                <Text
-                  marginLeft={2}
-                >{`Pokedex Number: ${card.nationalPokedexNumber}`}</Text>
-                <Text marginLeft={2}>Number</Text>
+                <Text marginLeft={2}>{`Pokedex Number: ${
+                  card.nationalPokedexNumber || '-'
+                }`}</Text>
+                <Text marginLeft={2}>{`Number: ${card.number || '-'}`}</Text>
                 <Text marginLeft={2}>{`Rarity: ${card.rarity}`}</Text>
                 <Text marginLeft={2}>{`Retreat Cost: ${
                   card.retreatCost || '-'
                 }`}</Text>
                 <Text marginLeft={2}>{`Series: ${card.series || '-'}`}</Text>
-                <Text marginLeft={2}>{`Set: ${card.set || 'set'}`}</Text>
                 <Text marginLeft={2}>{`Subtype: ${card.subtype || '-'}`}</Text>
                 <Text marginLeft={2}>{`Supertype: ${
                   card.supertype || '-'
