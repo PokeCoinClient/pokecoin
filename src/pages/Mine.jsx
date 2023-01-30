@@ -149,7 +149,7 @@ function Mine() {
   }, [isRunning, pageVisibilityStatus]);
 
   useEffect(() => {
-    return () => workerRef?.current?.cleanup();
+    return () => workerRef.current?.cleanup();
   }, []);
 
   return (
