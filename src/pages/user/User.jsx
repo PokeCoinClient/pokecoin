@@ -31,9 +31,9 @@ function User() {
   return (
     <Box>
       <Heading>Profile</Heading>
-      <Text>User Id: {data?._id}</Text>
-      <Text>Username: {data?.username}</Text>
-      <Text>Current balance: {currentBalance?.amount} Pokecoins</Text>
+      <Text>User Id: {data._id}</Text>
+      <Text>Username: {data.username}</Text>
+      <Text>Current balance: {currentBalance.amount} Pokecoins</Text>
     </Box>
   );
 }

@@ -44,7 +44,7 @@ const useBuyPackageByName = () => {
           isClosable: true,
           position: 'bottom-right',
         });
-        queryClient.invalidateQueries(['balance', user?.token]);
+        queryClient.invalidateQueries(['balance']);
       },
       onError: (error) => {
         toast({
