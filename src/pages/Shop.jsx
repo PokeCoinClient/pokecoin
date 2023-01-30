@@ -77,7 +77,8 @@ const useGetPackagePrice = () => {
 function SelectedPackage({ currentCard, cardPrice }) {
   const { isAuthenticated } = useAuth();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { mutate: buyPackage } = useBuyPackageByName();
+  const { mutate: buyPackage, data } = useBuyPackageByName();
+  console.log(data);
   return (
     <Box
       width="216.44px"
@@ -99,13 +100,17 @@ function SelectedPackage({ currentCard, cardPrice }) {
           <ModalHeader>{card.name}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Flex>
-              <Image src={card} width={330} />
-              <Box>
-                <Text marginLeft={3}>Package name: {currentCard}</Text>
-                <Text marginLeft={3}>Price: {cardPrice}</Text>
-              </Box>
-            </Flex>
+            {!data ? (
+              <Flex>
+                <Image src={card} width={330} />
+                <Box>
+                  <Text marginLeft={3}>Package name: {currentCard}</Text>
+                  <Text marginLeft={3}>Price: {cardPrice}</Text>
+                </Box>
+              </Flex>
+            ) : (
+              <Text>test</Text>
+            )}
           </ModalBody>
 
           <ModalFooter>
