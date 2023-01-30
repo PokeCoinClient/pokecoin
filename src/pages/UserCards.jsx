@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { useAuth } from '../contexts/AuthContext.jsx';
 import { getUserCards } from '../service/CardsService.js';
+import CardsTable from '../components/UserCardTable.jsx';
 
 function UserCards() {
   const { user } = useAuth();
