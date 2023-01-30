@@ -33,7 +33,7 @@ function Login() {
   });
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
-  const { user, setLogin } = useAuth();
+  const { setLogin } = useAuth();
 
   const { mutate: loginMutate } = useMutation(['login'], login, {
     onSuccess: (data) => {

@@ -4,19 +4,19 @@ import { useAuth } from '../../contexts/AuthContext';
 import { getMe, getUserBalance } from '../../service/AuthService.js';
 
 function User() {
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const { data, isLoading, isError } = useQuery(
     ['me'],
     () => getMe(user.token),
     {
-      enabled: !!user?.token,
+      enabled: isAuthenticated,
     }
   );
   const { data: currentBalance } = useQuery(
     ['currentBalance'],
     () => getUserBalance(user.token),
     {
-      enabled: !!user.token,
+      enabled: isAuthenticated,
     }
   );
 

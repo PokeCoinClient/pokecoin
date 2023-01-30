@@ -26,7 +26,6 @@ import {
   getCardPackages,
   getCurrentPackagePrice,
 } from '../service/CardsService.js';
-import { CardDetailModal } from './Cards.jsx';
 
 const useBuyPackageByName = () => {
   const { user } = useAuth();

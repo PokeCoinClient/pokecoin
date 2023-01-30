@@ -35,7 +35,7 @@ function Navbar() {
   const { data: userBalance } = useQuery({
     queryKey: ['balance'],
     queryFn: () => getUserBalance(user.token),
-    enabled: !!user?.token,
+    enabled: isAuthenticated,
   });
 
   return (
