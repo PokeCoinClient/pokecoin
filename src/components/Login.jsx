@@ -13,31 +13,11 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react';
-import { useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
 import { useAuth } from '../contexts/AuthContext';
-import axios from '../api/axios';
 import InputField from './InputField';
-
-const axiosLogin = async (data) => {
-  const resp = await axios.post('/auth/login', data);
-  return resp.data;
-};
-
-const axiosRegister = async (data) => {
-  const resp = await axios.post('/auth/register', data);
-  return resp.data;
-};
-
-const axiosMe = async (token) => {
-  const resp = await axios.get('/auth/me', {
-    headers: {
-      token: `${token}`,
-    },
-  });
-  return resp.data;
-};
+import { login, register as authRegister } from '../service/AuthService.js';
 
 function Login() {
   const {
@@ -55,16 +35,10 @@ function Login() {
   const toast = useToast();
   const { setLogin } = useAuth();
 
-  const initialRef = useRef(null);
-  const finalRef = useRef(null);
-
-  const { mutate: getMe } = useMutation(['me'], axiosMe, {});
-
-  const { mutate: loginMutate } = useMutation(['login'], axiosLogin, {
+  const { mutate: loginMutate } = useMutation(['login'], login, {
     onSuccess: (data) => {
       setLogin(data?.token);
       onClose();
-      getMe(data?.token);
       toast({
         title: 'Logged in.',
         description: 'You are now logged in.',
@@ -88,7 +62,7 @@ function Login() {
     },
   });
 
-  const { mutate: registerMutate } = useMutation(['register'], axiosRegister, {
+  const { mutate: registerMutate } = useMutation(['register'], authRegister, {
     onSuccess: () => {
       toast({
         title: 'Registered.',
@@ -118,8 +92,6 @@ function Login() {
       </Button>
       <Modal
         size={['xs', 'sm', 'md']}
-        initialFocusRef={initialRef}
-        finalFocusRef={finalRef}
         isOpen={isOpen}
         onClose={onClose}
         isCentered

@@ -14,7 +14,7 @@ export function AuthProvider({ children }) {
     token: null,
   });
 
-  const isAuthenticated = user?.token ?? false;
+  const isAuthenticated = !!user?.token ?? false;
 
   useEffect(() => {
     const token = localStorage.getItem('token');

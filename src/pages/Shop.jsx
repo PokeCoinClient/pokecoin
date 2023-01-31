@@ -45,7 +45,7 @@ const useBuyPackageByName = () => {
           isClosable: true,
           position: 'bottom-right',
         });
-        queryClient.invalidateQueries(['balance', user?.token]);
+        queryClient.invalidateQueries(['balance']);
       },
       onError: (error) => {
         toast({
@@ -131,7 +131,7 @@ function SelectedPackage({ currentCard, cardPrice }) {
       <Modal isOpen={isOpen} onClose={onClose} size="xl">
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>{currentCard}</ModalHeader>
+          <ModalHeader>{card.name}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             {!data ? (
