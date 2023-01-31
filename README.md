@@ -34,9 +34,21 @@ npm install
 ```bash
 npm run dev
 ```
+
+### Build the app
+```bash
+npm run build
+```
+
+
 ### Optionally, you can use the docker-compose file to run the app in development mode
 ```bash
 docker compose -f docker-compose.local.yml up -d --build
+```
+
+### Build the app
+```bash
+docker compose up -d --build
 ```
 
 ## Live Demo
