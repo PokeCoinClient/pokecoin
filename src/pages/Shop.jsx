@@ -26,7 +26,7 @@ import {
   getCardPackages,
   getCurrentPackagePrice,
 } from '../service/CardsService.js';
-import { CardDetailModal } from './Cards.jsx';
+import { useState } from 'react';
 
 const useBuyPackageByName = () => {
   const { user } = useAuth();
@@ -75,11 +75,44 @@ const useGetPackagePrice = () => {
   });
 };
 
+function ShowCards({ data }) {
+  const [page, setPage] = useState(0);
+  return (
+    <Box justifyContent={'center'}>
+      <Text align={'center'}>{JSON.stringify(data.cards[page].name)}</Text>
+      <Image src={data.cards[page].imageUrlHiRes} width={528} />
+      <Text align={'center'}>{`Card: ${page + 1}/${data?.cards?.length}`}</Text>
+      <Button m="5px" onClick={() => setPage(page - 1)} disabled={page === 0}>
+        Previous
+      </Button>
+      <Button
+        m="5px"
+        onClick={() => setPage(page + 1)}
+        disabled={data?.cards?.length - 1 === page}
+        marginLeft={352}
+      >
+        Next
+      </Button>
+    </Box>
+  );
+}
+
 function SelectedPackage({ currentCard, cardPrice }) {
   const { isAuthenticated } = useAuth();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { mutate: buyPackage, data } = useBuyPackageByName();
-  console.log(data);
+  const [disableButton, setDisableButton] = useState(false);
+
+  const handleBuyClick = () => {
+    setDisableButton(true);
+    buyPackage(currentCard);
+  };
+
+  const handleCloseClick = () => {
+    setDisableButton(false);
+    window.location.reload();
+  };
+
   return (
     <Box
       width="216.44px"
@@ -110,14 +143,7 @@ function SelectedPackage({ currentCard, cardPrice }) {
                 </Box>
               </Flex>
             ) : (
-              data.cards.map((card) => {
-                return (
-                  <Box key={card.id}>
-                    <Text>{JSON.stringify(card.name)}</Text>
-                    <Image src={card.imageUrlHiRes} width={330} />
-                  </Box>
-                );
-              })
+              <ShowCards data={data} />
             )}
           </ModalBody>
 
@@ -126,13 +152,14 @@ function SelectedPackage({ currentCard, cardPrice }) {
               <Button
                 colorScheme="blue"
                 mr={3}
-                onClick={() => buyPackage(currentCard)}
+                onClick={handleBuyClick}
+                isDisabled={disableButton}
               >
                 Buy
               </Button>
             )}
 
-            <Button colorScheme="blue" mr={3} onClick={onClose}>
+            <Button colorScheme="blue" mr={3} onClick={handleCloseClick}>
               Close
             </Button>
           </ModalFooter>

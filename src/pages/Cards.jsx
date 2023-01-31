@@ -115,19 +115,17 @@ function Cards() {
   });
   return (
     <Box>
-      <Button m="5px" onClick={() => setPage(page - 1)}>
+      <Button m="5px" onClick={() => setPage(page - 1)} disabled={page <= 0}>
         Previous
       </Button>
-      <Button m="5px" onClick={() => setPage(page + 1)}>
+      <Button
+        m="5px"
+        onClick={() => setPage(page + 1)}
+        disabled={cards?.cards?.length < 50}
+      >
         Next
       </Button>
-      {cards?.cards?.length != 0 ? (
-        <CardsTable cards={cards} />
-      ) : page < 0 ? (
-        setPage(0)
-      ) : (
-        setPage(page - 1)
-      )}
+      <CardsTable cards={cards} />
     </Box>
   );
 }
