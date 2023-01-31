@@ -11,6 +11,7 @@ import {
   ModalHeader,
   ModalOverlay,
   SimpleGrid,
+  Skeleton,
   Text,
   useDisclosure,
 } from '@chakra-ui/react';
@@ -19,9 +20,8 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { getCards } from '../service/CardsService.js';
 
-export function CardDetailModal({ card }) {
+export function CardDetailModal({ card, c }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  console.log(card);
   return (
     <>
       <Box
@@ -92,11 +92,10 @@ export function CardDetailModal({ card }) {
 function CardsTable(data) {
   const { cards } = data;
   return (
-    <SimpleGrid columns={[1, 2, 3]} justifyItems="center">
+    <SimpleGrid columns={[1, 2, 3, 4]} justifyItems="center" gap={3}>
       {cards?.cards.map((card) => {
         return (
           <Box key={card.id}>
-            <Text>{JSON.stringify(card.name)}</Text>
             <CardDetailModal card={card} />
           </Box>
         );
@@ -105,7 +104,6 @@ function CardsTable(data) {
   );
 }
 
-// TODO make use of useMemo for less rerendering
 function Cards() {
   const [page, setPage] = useState(0);
 
