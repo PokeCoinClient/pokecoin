@@ -1,6 +1,5 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
-import { VitePluginFonts } from 'vite-plugin-fonts';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -9,11 +8,6 @@ export default defineConfig({
   },
   plugins: [
     react(),
-    VitePluginFonts({
-      google: {
-        families: ['Press Start 2P', 'Silkscreen'],
-      },
-    }),
   ],
   server: {
     host: '0.0.0.0',
