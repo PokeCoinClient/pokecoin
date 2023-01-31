@@ -11,11 +11,12 @@ import {
 import icon from '../assets/icon.svg';
 import pokemon from '../assets/pokemon5.png';
 import card from '../assets/pokemon-card-backside.jpg';
+import GroupCards from '../assets/groupPokemon.png';
 
 function Item({ textColor, headerText, bodyText, image, reverse = false }) {
   return (
     <Flex
-      h={'20vh'}
+      h={'22vh'}
       borderRadius={'10px'}
       boxShadow={'rgba(0, 0, 0, 0.35) 0px 5px 15px'}
       flexDirection={reverse ? 'row-reverse' : 'row'}
@@ -30,7 +31,7 @@ function Item({ textColor, headerText, bodyText, image, reverse = false }) {
         </Text>
       </Flex>
       <Spacer />
-      <Image src={image} height="100%" />
+      <Image src={image} height="100%" p={1} />
     </Flex>
   );
 }
@@ -39,32 +40,37 @@ function Home() {
   const textColor = useColorModeValue('#554739', '#fff');
   return (
     <Flex flexDir={'column'} h={'100%'}>
-      <Center gap={2}>
+      <Center gap={5}>
         <Image src={icon} height="100px" />
         <Box>
           <Heading color={textColor}>Pokecoin</Heading>
           <Text color={textColor}>The best client to mine your pokecoins!</Text>
         </Box>
       </Center>
-      <Flex flexDir={'column'} flexGrow={1} justifyContent={'space-evenly'}>
+      <Flex
+        flexDir={'column'}
+        flexGrow={1}
+        justifyContent={'space-evenly'}
+        gap={3}
+      >
         <Item
           textColor={textColor}
           headerText={'Mine Pokecoins!'}
-          bodyText={'Have fun while patiently farming pokecoins\n'}
+          bodyText={'Farm Pokecoins with your favorite Pokemon'}
           image={pokemon}
         />
         <Item
           textColor={textColor}
           headerText={'Buy Pokemon cards'}
-          bodyText={'Buy super surprising Pokemon card packs\n'}
+          bodyText={'Buy super surprising Pokemon card packs'}
           image={card}
           reverse={true}
         />
         <Item
           textColor={textColor}
           headerText={'Collect Pokemon Cards'}
-          bodyText={'Collect Pokemon cards and have fun looking at them'}
-          image={card}
+          bodyText={'Collect rare Pokemon cards and have fun looking at them'}
+          image={GroupCards}
         />
       </Flex>
     </Flex>
