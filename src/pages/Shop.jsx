@@ -75,42 +75,73 @@ const useGetPackagePrice = () => {
   });
 };
 
-function ShowCards({ data }) {
+function ShowCards({ data, cardIsOpen, cardOnClose }) {
   const [page, setPage] = useState(0);
   return (
-    <Box justifyContent={'center'}>
-      <Text align={'center'}>{JSON.stringify(data.cards[page].name)}</Text>
-      <Image src={data.cards[page].imageUrlHiRes} width={528} />
-      <Text align={'center'}>{`Card: ${page + 1}/${data?.cards?.length}`}</Text>
-      <Button m="5px" onClick={() => setPage(page - 1)} disabled={page === 0}>
-        Previous
-      </Button>
-      <Button
-        m="5px"
-        onClick={() => setPage(page + 1)}
-        disabled={data?.cards?.length - 1 === page}
-        marginLeft={352}
-      >
-        Next
-      </Button>
-    </Box>
+    <Modal isOpen={cardIsOpen} onClose={cardOnClose} size="xl">
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>{JSON.stringify(data?.cards[page]?.name)}</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          <Box>
+            <Image src={data?.cards[page]?.imageUrlHiRes} width={528} />
+            <Text align={'center'}>{`Card: ${page + 1}/${
+              data?.cards?.length
+            }`}</Text>
+          </Box>
+        </ModalBody>
+
+        <ModalFooter justifyContent={'space-between'}>
+          <Box>
+            <Button
+              al
+              m="5px"
+              onClick={() => setPage(page - 1)}
+              disabled={page === 0}
+            >
+              Previous
+            </Button>
+            <Button
+              m="5px"
+              onClick={() => setPage(page + 1)}
+              disabled={data?.cards?.length - 1 === page}
+            >
+              Next
+            </Button>
+          </Box>
+          <Box>
+            <Button
+              colorScheme="blue"
+              mr={3}
+              onClick={() => {
+                cardOnClose();
+                setPage(0);
+              }}
+            >
+              Close
+            </Button>
+          </Box>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
   );
 }
 
 function SelectedPackage({ currentCard, cardPrice }) {
   const { isAuthenticated } = useAuth();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: cardIsOpen,
+    onClose: cardOnClose,
+    onOpen: cardOnOpen,
+  } = useDisclosure();
   const { mutate: buyPackage, data } = useBuyPackageByName();
-  const [disableButton, setDisableButton] = useState(false);
 
   const handleBuyClick = () => {
-    setDisableButton(true);
     buyPackage(currentCard);
-  };
-
-  const handleCloseClick = () => {
-    setDisableButton(false);
-    window.location.reload();
+    onClose();
+    cardOnOpen();
   };
 
   return (
@@ -134,37 +165,34 @@ function SelectedPackage({ currentCard, cardPrice }) {
           <ModalHeader>{card.name}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            {!data ? (
-              <Flex>
-                <Image src={card} width={330} />
-                <Box>
-                  <Text marginLeft={3}>Package name: {currentCard}</Text>
-                  <Text marginLeft={3}>Price: {cardPrice}</Text>
-                </Box>
-              </Flex>
-            ) : (
-              <ShowCards data={data} />
-            )}
+            <Flex>
+              <Image src={card} width={330} />
+              <Box>
+                <Text marginLeft={3}>Package name: {currentCard}</Text>
+                <Text marginLeft={3}>Price: {cardPrice}</Text>
+              </Box>
+            </Flex>
           </ModalBody>
 
           <ModalFooter>
             {isAuthenticated && (
-              <Button
-                colorScheme="blue"
-                mr={3}
-                onClick={handleBuyClick}
-                isDisabled={disableButton}
-              >
+              <Button colorScheme="blue" mr={3} onClick={handleBuyClick}>
                 Buy
               </Button>
             )}
 
-            <Button colorScheme="blue" mr={3} onClick={handleCloseClick}>
+            <Button colorScheme="blue" mr={3} onClick={onClose}>
               Close
             </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
+
+      <ShowCards
+        data={data}
+        cardIsOpen={cardIsOpen}
+        cardOnClose={cardOnClose}
+      />
     </Box>
   );
 }
