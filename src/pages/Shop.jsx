@@ -26,6 +26,7 @@ import {
   getCardPackages,
   getCurrentPackagePrice,
 } from '../service/CardsService.js';
+import { useState } from 'react';
 
 const useBuyPackageByName = () => {
   const { user } = useAuth();
@@ -74,11 +75,75 @@ const useGetPackagePrice = () => {
   });
 };
 
+function ShowCards({ data, cardIsOpen, cardOnClose }) {
+  const [page, setPage] = useState(0);
+  return (
+    <Modal isOpen={cardIsOpen} onClose={cardOnClose} size="xl">
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>{JSON.stringify(data?.cards[page]?.name)}</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          <Box>
+            <Image src={data?.cards[page]?.imageUrlHiRes} width={528} />
+            <Text align={'center'}>{`Card: ${page + 1}/${
+              data?.cards?.length
+            }`}</Text>
+          </Box>
+        </ModalBody>
+
+        <ModalFooter justifyContent={'space-between'}>
+          <Box>
+            <Button
+              al
+              m="5px"
+              onClick={() => setPage(page - 1)}
+              disabled={page === 0}
+            >
+              Previous
+            </Button>
+            <Button
+              m="5px"
+              onClick={() => setPage(page + 1)}
+              disabled={data?.cards?.length - 1 === page}
+            >
+              Next
+            </Button>
+          </Box>
+          <Box>
+            <Button
+              colorScheme="blue"
+              mr={3}
+              onClick={() => {
+                cardOnClose();
+                setPage(0);
+              }}
+            >
+              Close
+            </Button>
+          </Box>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
+  );
+}
+
 function SelectedPackage({ currentCard, cardPrice }) {
   const { isAuthenticated } = useAuth();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: cardIsOpen,
+    onClose: cardOnClose,
+    onOpen: cardOnOpen,
+  } = useDisclosure();
   const { mutate: buyPackage, data } = useBuyPackageByName();
-  console.log(data);
+
+  const handleBuyClick = () => {
+    buyPackage(currentCard);
+    onClose();
+    cardOnOpen();
+  };
+
   return (
     <Box
       width="216.44px"
@@ -97,36 +162,21 @@ function SelectedPackage({ currentCard, cardPrice }) {
       <Modal isOpen={isOpen} onClose={onClose} size="xl">
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>{currentCard}</ModalHeader>
+          <ModalHeader>{card.name}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            {!data ? (
-              <Flex>
-                <Image src={card} width={330} />
-                <Box>
-                  <Text marginLeft={3}>Package name: {currentCard}</Text>
-                  <Text marginLeft={3}>Price: {cardPrice}</Text>
-                </Box>
-              </Flex>
-            ) : (
-              data.cards.map((card) => {
-                return (
-                  <Box key={card.id}>
-                    <Text>{JSON.stringify(card.name)}</Text>
-                    <Image src={card.imageUrlHiRes} width={330} />
-                  </Box>
-                );
-              })
-            )}
+            <Flex>
+              <Image src={card} width={330} />
+              <Box>
+                <Text marginLeft={3}>Package name: {currentCard}</Text>
+                <Text marginLeft={3}>Price: {cardPrice}</Text>
+              </Box>
+            </Flex>
           </ModalBody>
 
           <ModalFooter>
             {isAuthenticated && (
-              <Button
-                colorScheme="blue"
-                mr={3}
-                onClick={() => buyPackage(currentCard)}
-              >
+              <Button colorScheme="blue" mr={3} onClick={handleBuyClick}>
                 Buy
               </Button>
             )}
@@ -137,6 +187,12 @@ function SelectedPackage({ currentCard, cardPrice }) {
           </ModalFooter>
         </ModalContent>
       </Modal>
+
+      <ShowCards
+        data={data}
+        cardIsOpen={cardIsOpen}
+        cardOnClose={cardOnClose}
+      />
     </Box>
   );
 }

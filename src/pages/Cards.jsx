@@ -1,8 +1,23 @@
-import { Box, Button } from '@chakra-ui/react';
+import { Box, Button, SimpleGrid } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { getCards } from '../service/CardsService.js';
-import CardsTable from '../components/CardTable.jsx';
+import { CardDetailModal } from '../components/CardDetailModal.jsx';
+
+function CardsTable(data) {
+  const { cards } = data;
+  return (
+    <SimpleGrid columns={[1, 2, 3, 4]} justifyItems="center" gap={3}>
+      {cards?.cards.map((card) => {
+        return (
+          <Box key={card.id}>
+            <CardDetailModal card={card} />
+          </Box>
+        );
+      })}
+    </SimpleGrid>
+  );
+}
 
 function Cards() {
   const [page, setPage] = useState(0);
@@ -13,19 +28,17 @@ function Cards() {
   });
   return (
     <Box>
-      <Button m="5px" onClick={() => setPage(page - 1)}>
+      <Button m="5px" onClick={() => setPage(page - 1)} disabled={page <= 0}>
         Previous
       </Button>
-      <Button m="5px" onClick={() => setPage(page + 1)}>
+      <Button
+        m="5px"
+        onClick={() => setPage(page + 1)}
+        disabled={cards?.cards?.length < 50}
+      >
         Next
       </Button>
-      {cards?.cards?.length !== 0 ? (
-        <CardsTable cards={cards} />
-      ) : page < 0 ? (
-        setPage(0)
-      ) : (
-        setPage(page - 1)
-      )}
+      <CardsTable cards={cards} />
     </Box>
   );
 }

@@ -72,7 +72,6 @@ export function CardDetailModal({ card }) {
               </Box>
             </Flex>
           </ModalBody>
-
           <ModalFooter>
             <Button colorScheme="blue" mr={3} onClick={onClose}>
               Close
