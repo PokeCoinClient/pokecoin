@@ -15,6 +15,7 @@ import card from '../assets/pokemon-card-backside.jpg';
 function Item({ textColor, headerText, bodyText, image, reverse = false }) {
   return (
     <Flex
+      h={'20vh'}
       borderRadius={'10px'}
       boxShadow={'rgba(0, 0, 0, 0.35) 0px 5px 15px'}
       flexDirection={reverse ? 'row-reverse' : 'row'}
@@ -29,7 +30,7 @@ function Item({ textColor, headerText, bodyText, image, reverse = false }) {
         </Text>
       </Flex>
       <Spacer />
-      <Image src={image} height="300px" />
+      <Image src={image} height="100%" />
     </Flex>
   );
 }
@@ -37,12 +38,7 @@ function Item({ textColor, headerText, bodyText, image, reverse = false }) {
 function Home() {
   const textColor = useColorModeValue('#554739', '#fff');
   return (
-    <Flex
-      gap={10}
-      flexDir={'column'}
-      h={'100%'}
-      justifyContent={'space-evenly'}
-    >
+    <Flex flexDir={'column'} h={'100%'}>
       <Center gap={2}>
         <Image src={icon} height="100px" />
         <Box>
@@ -50,25 +46,27 @@ function Home() {
           <Text color={textColor}>The best client to mine your pokecoins!</Text>
         </Box>
       </Center>
-      <Item
-        textColor={textColor}
-        headerText={'Mine Pokecoins!'}
-        bodyText={'Have fun while patiently farming pokecoins\n'}
-        image={pokemon}
-      />
-      <Item
-        textColor={textColor}
-        headerText={'Buy Pokemon cards'}
-        bodyText={'Buy super surprising Pokemon card packs\n'}
-        image={card}
-        reverse={true}
-      />
-      <Item
-        textColor={textColor}
-        headerText={'Collect Pokemon Cards'}
-        bodyText={'Collect Pokemon cards and have fun looking at them'}
-        image={card}
-      />
+      <Flex flexDir={'column'} flexGrow={1} justifyContent={'space-evenly'}>
+        <Item
+          textColor={textColor}
+          headerText={'Mine Pokecoins!'}
+          bodyText={'Have fun while patiently farming pokecoins\n'}
+          image={pokemon}
+        />
+        <Item
+          textColor={textColor}
+          headerText={'Buy Pokemon cards'}
+          bodyText={'Buy super surprising Pokemon card packs\n'}
+          image={card}
+          reverse={true}
+        />
+        <Item
+          textColor={textColor}
+          headerText={'Collect Pokemon Cards'}
+          bodyText={'Collect Pokemon cards and have fun looking at them'}
+          image={card}
+        />
+      </Flex>
     </Flex>
   );
 }
